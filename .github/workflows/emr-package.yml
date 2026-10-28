@@ -20,6 +20,7 @@ jobs:
           persist-credentials: false
       - name: Package and installer checks
         run: |
+          python3 EMRPackage/tools/check-release-docs.py
           python3 -m unittest discover -s EMRPackage/tests -v
           ./EMRPackage/install.command --dry-run
           ./Tools/test-dashboard.sh

@@ -69,18 +69,27 @@ published emr source release and builds it locally. Quit the running companion
 before updating. Its preferences stay in the same domain and its previous app is
 restored if final installation verification fails.
 
-For example, after tests have passed:
+Every published update must update README.md and EMRPackage/CHANGELOG.md in the release commit.
+Before tagging:
+
+1. Bump package.json and update the README version, installation tag, feature list and affected instructions.
+2. Add the release as the first version in EMRPackage/CHANGELOG.md, describing what changed and any migration steps.
+3. Run `python3 EMRPackage/tools/check-release-docs.py` and the checks appropriate to the change. CI also runs the documentation check.
+4. Review the README from a new user's perspective; automated checks do not validate every instruction.
+5. Publish only GitHub source and release notes. Do not upload app binaries, PKGs or signing material.
+
+For example, after documentation and tests have passed:
 
 ```sh
-git tag emr-v0.1.1
-git push origin emr-v0.1.1
-gh release create emr-v0.1.1 --repo emrearibulan/emr-vorssaint-package \
-  --title 'emr package 0.1.1' --notes-file release-notes.md
+git tag emr-v0.1.3
+git push origin emr-v0.1.3
+gh release create emr-v0.1.3 --repo emrearibulan/emr-vorssaint-package \
+  --title 'emr package 0.1.3' --notes-file release-notes.md
 ```
 
-No Apple Developer credentials are embedded, created or required for source builds.
-The source-built companion is locally ad-hoc signed, not notarized or an official
-Vorssaint build. For a later friend-friendly downloaded app/PKG, add your own Apple
-Developer ID and notarization in a protected release environment; never publish
-private signing material. Do not remove quarantine or disable Gatekeeper as an
-installation strategy.
+The user chose GitHub source-only distribution on 28 October 2026. Do not pursue
+Apple Developer membership, Developer ID signing, notarization or binary installers
+for this project. Local ad-hoc signing remains part of building the source companion;
+it does not require a Developer Program identity. No signing credentials are needed
+or bundled. Future feature releases follow the same source-only model unless the
+user changes this project decision.
