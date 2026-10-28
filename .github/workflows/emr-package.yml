@@ -24,6 +24,7 @@ jobs:
           python3 -m unittest discover -s EMRPackage/tests -v
           ./EMRPackage/install.command --dry-run
           ./Tools/test-dashboard.sh
+          ./Tools/test-launcher.sh
       - name: Build companion
         run: ./build-dashboard.sh
       - name: Verify packaged app

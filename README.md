@@ -4,7 +4,7 @@
 
 emr package is an open-source collection built from [Vorssaint](https://github.com/vorssaint/vorssaint-utils). It runs in a separate companion app called **Island Monitor**, alongside the official app. This keeps the official Vorssaint updater and the custom features on independent update paths.
 
-**Version:** 0.1.3 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
+**Version:** 0.2.0 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
 
 [Install](#install-from-source) · [Use](#first-launch) · [Update](#updates) · [Troubleshooting](#troubleshooting) · [Release history](EMRPackage/CHANGELOG.md)
 
@@ -57,6 +57,21 @@ Changes appear immediately in the dashboard and settings preview. The selection 
 
 Hardware monitoring works without Codex. Usage information requires your own local Codex installation and available records. No user account, credentials, usage history or personal colour preference is bundled.
 
+### 2. [Apps & Games](EMRPackage/features/apps-games-launcher.md)
+
+Add apps and games individually; **each app gets its own clickable side icon**, like the island's Settings button. Nothing is added or launched automatically.
+
+Open **Settings → Dynamic Island → Layout → Apps & Games**:
+
+1. Choose **Add from CrossOver → app — bottle** for one installed CrossOver launcher, or **Add App or Game…** to select a Mac `.app`.
+2. The app's own icon appears in the first free side slot. Choose **Left**, **Right** or **Bottom** beside the app to change its position.
+3. Click that icon in the opened island to launch the exact app. CrossOver's own wrapper chooses its game and bottle.
+4. Use the up/down controls to reorder apps or **Remove** to remove an icon without uninstalling the app.
+
+The layout editor above also lets you drag buttons or choose saved apps with **+**. Each side has three slots, including hidden section buttons; move or remove unused buttons to make room. If all slots are full, a newly added app stays saved as **Not placed** until you choose a free side. Existing Settings/Explore buttons are preserved.
+
+App selections are local to your Mac, survive restarts/updates and are not included in the shared source.
+
 ## Install from source
 
 ### Requirements
@@ -84,7 +99,7 @@ xcrun swiftc --version
 Quit **Island Monitor** if an earlier version is running. Choose a source folder in Terminal and run:
 
 ```sh
-git clone --depth 1 --branch emr-v0.1.3 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.2.0 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```
@@ -125,6 +140,7 @@ Source builds use local ad-hoc signing as part of the normal build. This project
 3. In **Island Monitor → Settings → Dynamic Island → Content**, keep **Sys Performance** enabled.
 4. Open the island by hovering over it or using **Open Dynamic Island** in settings. Select **Sys Performance**.
 5. Choose the colour for readings without capacity using the picker described above.
+6. Under **Layout → Apps & Games**, add your games/apps one by one and choose a side for each icon.
 
 A fresh companion installation enables monitoring and Codex usage with Sys Performance as its home section. Updates preserve existing choices. To start it automatically, enable **Settings → General → Launch at login** yourself.
 
@@ -168,6 +184,8 @@ Every published package update must include an updated README and [changelog](EM
 | A value uses the custom colour | Its capacity is unavailable; this is expected for readings such as network speed. |
 | Installer says the companion is running | Quit Island Monitor, then run the installer/updater again. |
 | App is missing from system Applications | Check `~/Applications`. |
+| A launcher entry is unavailable | Its app was moved or removed and its bookmark could not resolve it. Remove the menu entry and add the installed app again. |
+| A CrossOver game is not listed | Create its macOS launcher in CrossOver, then reopen Add from CrossOver; or use Add App or Game… to select an existing wrapper. |
 | Swift/SDK build errors | Check requirements and update the developer tools; include the exact error and tool versions in a report. |
 | Official download/identity verification fails | Install official Vorssaint from its upstream project and report the failure. Do not bypass verification. |
 
@@ -205,6 +223,8 @@ cd emr-package-dev
 | `build-dashboard.sh` | Companion adapter around the upstream build. |
 | `Sources/Vorssaint/UI/Notch/NotchSystemView.swift` | Sys Performance cards and colours. |
 | `Sources/Vorssaint/UI/Settings/NotchSystemSettings.swift` | Colour preference UI. |
+| `Sources/Vorssaint/Services/Notch/IslandLauncherService.swift` | Local app discovery, bookmarks, placement and launching. |
+| `Sources/Vorssaint/UI/Settings/NotchLauncherSettings.swift` | Individual app selection, placement and ordering. |
 | `Sources/Vorssaint/Services/Notch/DashboardUsageSupport.swift` | Usage bands and Codex allowance validation. |
 
 Run checks appropriate to your change:
@@ -214,6 +234,7 @@ python3 EMRPackage/tools/check-release-docs.py
 python3 -m unittest discover -s EMRPackage/tests -v
 ./EMRPackage/install.command --dry-run
 ./Tools/test-dashboard.sh
+./Tools/test-launcher.sh
 ./build-dashboard.sh
 "build/stage.noindex/Island Monitor.app/Contents/MacOS/IslandMonitor" --selftest
 codesign --verify --deep --strict "build/stage.noindex/Island Monitor.app"

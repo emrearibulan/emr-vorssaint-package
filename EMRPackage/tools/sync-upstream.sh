@@ -41,6 +41,7 @@ PY
 git add EMRPackage/package.json
 git diff --cached --quiet || git commit -m "chore(emr): record upstream $EMR_LATEST"
 ./Tools/test-dashboard.sh
+./Tools/test-launcher.sh
 python3 EMRPackage/tools/check-release-docs.py
 python3 -m unittest discover -s EMRPackage/tests -v
 ./build-dashboard.sh

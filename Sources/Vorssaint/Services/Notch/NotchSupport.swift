@@ -1356,13 +1356,14 @@ enum NotchQuickAccessSide: String, CaseIterable, Codable {
 }
 
 enum NotchQuickAction: Hashable, Identifiable {
-    case explore, settings, pin, module(NotchModule), control(NotchControlItem)
+    case explore, settings, pin, application(UUID), module(NotchModule), control(NotchControlItem)
 
     var id: String {
         switch self {
         case .explore: return "explore"
         case .settings: return "settings"
         case .pin: return "pin"
+        case .application(let id): return "emr.app." + id.uuidString
         case .module(let module): return module.rawValue
         case .control(let item): return "control." + item.rawValue
         }
@@ -1374,7 +1375,8 @@ enum NotchQuickAction: Hashable, Identifiable {
         case "settings": self = .settings
         case "pin": self = .pin
         default:
-            if id.hasPrefix("control."), let item = NotchControlItem(rawValue: String(id.dropFirst(8))) {
+            if id.hasPrefix("emr.app."), let value = UUID(uuidString: String(id.dropFirst(8))) { self = .application(value) }
+            else if id.hasPrefix("control."), let item = NotchControlItem(rawValue: String(id.dropFirst(8))) {
                 self = .control(item)
             } else if let module = NotchModule(rawValue: id) { self = .module(module) }
             else { return nil }
@@ -1383,11 +1385,16 @@ enum NotchQuickAction: Hashable, Identifiable {
 
     static var optionalActions: [Self] {
         [.explore, .settings, .pin] + NotchModule.allCases.map(Self.module)
-            + NotchControlItem.allCases.filter { !$0.isLevel }.map(Self.control)
+            + NotchControlItem.allCases.filter { !$0.isLevel }.map(Self.control) + applicationActions()
+    }
+
+    static func applicationActions(in defaults: UserDefaults = .standard) -> [Self] {
+        IslandLauncherSupport.decode(defaults.data(forKey: DefaultsKey.notchLauncherEntries) ?? Data()).map { .application($0.id) }
     }
 
     func isAvailable(in defaults: UserDefaults = .standard) -> Bool {
         switch self {
+        case .application: return Self.applicationActions(in: defaults).contains(self)
         case .module(let module): return NotchSupport.modules(in: defaults).contains(module)
         case .control(let item): return item.isAvailable(in: defaults)
         default: return true

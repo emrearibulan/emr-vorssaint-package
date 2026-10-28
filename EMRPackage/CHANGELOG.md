@@ -1,5 +1,12 @@
 # emr package changelog
 
+## 0.2.0 — 28 October 2026
+
+- Added **Apps & Games** as the second package feature: individual side icons for chosen Mac apps and CrossOver games.
+- Discover CrossOver app wrappers with bottle names, select other apps, and remove or reorder saved entries in settings.
+- Preserve existing layouts and preferences; place each chosen app in a free layout slot without replacing existing buttons. No app selections are bundled or launched automatically.
+- Added launcher persistence/validation checks and updated installation/use documentation.
+
 ## 0.1.3 — 28 October 2026
 
 - Published the package with **Sys Performance** as its first bundled feature.

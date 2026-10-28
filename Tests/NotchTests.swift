@@ -2248,6 +2248,22 @@ enum NotchTests {
                      && NotchControlItem.mixer.setupRequirement == .page(.mixer, feature: .mixer)
                      && NotchControlItem.speedTest.setupRequirement == .page(.system, feature: .monitorNetwork),
                      "page-gated controls lead to their island section or the required feature")
+        let savedLauncherLayout = defaults.object(forKey: DefaultsKey.notchQuickAccessLayout)
+        let savedLauncherEntries = defaults.object(forKey: DefaultsKey.notchLauncherEntries)
+        let launcherEntry = IslandLauncherEntry(name: "Test Game", path: "/Applications/Test Game.app")
+        let appAction = NotchQuickAction.application(launcherEntry.id)
+        defaults.set(try? JSONEncoder().encode([launcherEntry]), forKey: DefaultsKey.notchLauncherEntries)
+        suite.expect(NotchQuickAction(id: appAction.id) == appAction && appAction.isAvailable(in: defaults),
+                     "a saved app round-trips as its own available side-button action")
+        let appLayout = NotchQuickAccessConfiguration(side: .right, actions: [.settings, appAction])
+        defaults.set(appLayout.encoded, forKey: DefaultsKey.notchQuickAccessLayout)
+        suite.expect(NotchQuickAccessConfiguration.stored(in: defaults).actions == [.settings, appAction],
+                     "individual app icons preserve the existing settings button and saved layout")
+        defaults.set(Data(), forKey: DefaultsKey.notchLauncherEntries)
+        suite.expect(!appAction.isAvailable(in: defaults) && NotchQuickAction(id: "emr.app.invalid") == nil,
+                     "missing and malformed app references cannot launch arbitrary targets")
+        defaults.set(savedLauncherLayout, forKey: DefaultsKey.notchQuickAccessLayout)
+        defaults.set(savedLauncherEntries, forKey: DefaultsKey.notchLauncherEntries)
         defaults.set("panel,panel,unknown,speedTest", forKey: DefaultsKey.notchControlOrder)
         defaults.set("volume,screenshot", forKey: DefaultsKey.notchHiddenControls)
         let controls = NotchSupport.controls(in: defaults)

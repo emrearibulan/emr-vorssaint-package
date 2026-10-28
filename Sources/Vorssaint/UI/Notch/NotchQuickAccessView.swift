@@ -65,6 +65,7 @@ struct NotchQuickAccessView: View {
     @ObservedObject var motion: NotchQuickAccessMotion
     /// Only the glass surface below follows it; it changes every frame of a resize.
     let backdrop: NotchBackdropPresentation
+    private let launcher = IslandLauncherService.shared
     @ObservedObject private var l10n = L10n.shared
     @ObservedObject private var awake = KeepAwakeManager.shared
     @ObservedObject private var microphone = MicMuteService.shared
@@ -136,11 +137,15 @@ struct NotchQuickAccessView: View {
         default: break
         }
         let title = isBack ? l10n.s.obBack : button.label.isEmpty ? actionTitle : button.label
-        return Button {
-            service.activateQuickAction(action)
-        } label: {
-            Image(systemName: symbol)
-                .font(.system(size: 17, weight: .medium))
+        let content = Group {
+            if case .application(let id) = action,
+               let entry = launcher.entries.first(where: { $0.id == id }), let url = launcher.resolvedURL(entry) {
+                Image(nsImage: NSWorkspace.shared.icon(forFile: url.path)).resizable().scaledToFit()
+                    .frame(width: 25, height: 25)
+            } else {
+                Image(systemName: symbol).font(.system(size: 17, weight: .medium))
+            }
+        }
                 .frame(width: NotchQuickAccessLayout.diameter, height: NotchQuickAccessLayout.diameter)
                 // In glass the drop beneath carries the island's shade, which
                 // the window server does not count as the window's own pixels:
@@ -152,7 +157,7 @@ struct NotchQuickAccessView: View {
                         .allowsHitTesting(false)
                 }
                 .contentShape(Circle())
-        }
+        return Button { service.activateQuickAction(action) } label: { content }
         .buttonStyle(NotchButtonStyle(cornerRadius: NotchQuickAccessLayout.diameter / 2))
         .help(title)
         .accessibilityLabel(title)
@@ -265,6 +270,7 @@ extension NotchQuickAction {
         case .explore: return "square.grid.2x2"
         case .settings: return "gearshape"
         case .pin: return "pin"
+        case .application: return "app"
         case .module(let module): return module.symbol
         case .control(let item): return item.symbol
         }
@@ -274,6 +280,7 @@ extension NotchQuickAction {
         switch self {
         case .explore: return FeatureStrings.notch(l10n.language).sectionsTitle
         case .settings: return l10n.s.menuSettings
+        case .application(let id): return IslandLauncherService.shared.entries.first(where: { $0.id == id })?.name ?? "Unavailable app"
         case .pin: return FeatureStrings.notch(l10n.language).pin
         case .module(let module): return module.title(l10n.language)
         case .control(let item): return item.title(l10n)
