@@ -1,5 +1,11 @@
 # emr package changelog
 
+## 0.2.1 — 28 October 2026
+
+- Named the second bundled feature **app shortcuts** in settings, the layout editor, package catalogue and README.
+- Preserved its stable feature/action IDs, selected apps, side positions and dashboard colour preferences.
+- Updated the feature documentation and source installation tag to match the release.
+
 ## 0.2.0 — 28 October 2026
 
 - Added **Apps & Games** as the second package feature: individual side icons for chosen Mac apps and CrossOver games.

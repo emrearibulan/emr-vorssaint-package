@@ -1,9 +1,9 @@
-# Apps & Games
+# app shortcuts
 
 Feature ID: `apps-games-launcher`; individual action ID: `emr.app.<saved-UUID>`.
 
 Each chosen app gets its own side icon in the opened Dynamic Island. Open
-**Settings → Dynamic Island → Layout → Apps & Games** and add apps one at a time:
+**Settings → Dynamic Island → Layout → app shortcuts** and add apps one at a time:
 
 1. Choose **Add from CrossOver → app — bottle** for a discovered wrapper.
 2. Or choose **Add App or Game…** and select one installed `.app`.

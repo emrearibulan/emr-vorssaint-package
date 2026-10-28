@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "emr-package",
   "name": "emr package",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": "emrearibulan/emr-vorssaint-package",
   "developmentBranch": "emr/package",
   "app": {
@@ -27,10 +27,10 @@
     },
     {
       "id": "apps-games-launcher",
-      "name": "Apps & Games",
+      "name": "app shortcuts",
       "module": "quick-access",
       "enabledByDefault": true,
-      "documentation": "features/apps-games-launcher.md"
+      "documentation": "features/app-shortcuts.md"
     }
   ]
 }
