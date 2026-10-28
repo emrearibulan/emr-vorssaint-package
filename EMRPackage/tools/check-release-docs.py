@@ -17,6 +17,10 @@ latest = re.search(r"^## (\d+\.\d+\.\d+)\b", changelog, re.MULTILINE)
 if not latest or latest.group(1) != version:
     errors.append("Add the current release as the first version in EMRPackage/CHANGELOG.md")
 for feature in data["features"]:
+    if feature.get("menuTitle") != feature["name"] + " -emr" or feature["name"].endswith(" -emr"):
+        errors.append("Top-level feature menuTitle must append exactly ' -emr': " + feature["name"])
+    if feature.get("menuTitle", "") not in readme:
+        errors.append("Document the displayed top-level menuTitle in README: " + feature["name"])
     link = "EMRPackage/" + feature["documentation"]
     if f'[{feature["name"]}]({link})' not in readme or not (root / link).is_file():
         errors.append("Document the bundled feature in README: " + feature["name"])

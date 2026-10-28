@@ -8,7 +8,7 @@ struct NotchLauncherSettings: View {
     @AppStorage(DefaultsKey.notchQuickAccessLayout) private var layoutData = Data()
 
     var body: some View {
-        SettingsCard(title: "App shortcuts") {
+        SettingsCard(title: EmrFeatureLabel.topLevel("App shortcuts")) {
             Text("Add apps individually. Each gets its own side icon; CrossOver launchers open their own bottle and game.")
                 .font(.callout).foregroundStyle(.secondary)
             if launcher.entries.isEmpty { Text("No apps added yet.").foregroundStyle(.secondary) }

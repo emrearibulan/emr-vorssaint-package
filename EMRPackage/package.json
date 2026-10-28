@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "emr-package",
   "name": "emr package",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": "emrearibulan/emr-vorssaint-package",
   "developmentBranch": "emr/package",
   "app": {
@@ -23,14 +23,16 @@
       "name": "Sys Performance",
       "module": "system",
       "enabledByDefault": true,
-      "documentation": "features/sys-performance.md"
+      "documentation": "features/sys-performance.md",
+      "menuTitle": "Sys Performance -emr"
     },
     {
       "id": "apps-games-launcher",
       "name": "App shortcuts",
       "module": "quick-access",
       "enabledByDefault": true,
-      "documentation": "features/app-shortcuts.md"
+      "documentation": "features/app-shortcuts.md",
+      "menuTitle": "App shortcuts -emr"
     }
   ]
 }

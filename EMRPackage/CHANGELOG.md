@@ -1,5 +1,12 @@
 # emr package changelog
 
+## 0.2.3 — 28 October 2026
+
+- Tagged top-level emr additions as **Sys Performance -emr** and **App shortcuts -emr**.
+- Kept individual apps/games, child controls and dialog titles untagged.
+- Recorded this scope for future additions in the maintenance guide and catalogue/README checks.
+- Preserved stable feature IDs and all saved preferences.
+
 ## 0.2.2 — 28 October 2026
 
 - Corrected the feature name to **App shortcuts** in the app, package catalogue and README.

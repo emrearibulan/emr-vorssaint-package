@@ -45,6 +45,13 @@ that custom UI changes will merge unchanged forever.
 
 ## Adding another feature
 
+Top-level feature labels added by emr must use the exact suffix ` -emr` (one space
+before the hyphen, none after it). Use `EmrFeatureLabel.topLevel(name)` only for
+that level and record `menuTitle: "<name> -emr"` in the package catalogue. Keep
+base feature names and stable IDs unchanged. Do not tag individual app/game
+names, child controls or dialog titles. The release documentation check validates
+the catalogue labels, and README navigation paths must use the displayed titles.
+
 1. Create `emr/feature-name` from `emr/package`.
 2. Keep services, views and settings focused; reuse the upstream feature catalogue
    for availability and permissions. Request new permissions only when needed.
