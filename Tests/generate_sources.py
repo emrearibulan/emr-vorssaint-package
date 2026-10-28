@@ -1720,6 +1720,14 @@ def main():
           + "}\n}\n")
     switcher = "Sources/Vorssaint/UI/Switcher/SwitcherView.swift"
     switcher_service = "Sources/Vorssaint/Services/Switcher/AppSwitcher.swift"
+    write("SwitcherAllWindows.swift", "import AppKit\n"
+          + "extension SwitcherAllWindowsTests.Model {\n"
+          + "".join(declaration(switcher_service, prefix).replace("private ", "", 1)
+                    for prefix in ["    private func initialSelectionIndex(",
+                                   "    private func advanceSelection(",
+                                   "    private func advanceAppSelection(",
+                                   "    private func advanceWindowInSelectedApp("])
+          + "}\n")
     write("SwitcherScroll.swift", "import AppKit\nimport SwiftUI\n"
           + "extension SwitcherScrollContract {\nstruct Strip: View {\n"
           + "@ObservedObject var switcher: Model\n"

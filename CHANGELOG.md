@@ -7,9 +7,10 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Summary
-More reliable window switching, screenshots, audio and Settings. New controls add configurable calendar countdowns, mouse-wheel zoom and app quitting, alongside smoother sliders, English command search and command-line settings backups.
+More reliable window switching, screenshots, audio and Settings. New controls add a shortcut for all windows, configurable calendar countdowns, mouse-wheel zoom and app quitting, alongside smoother sliders, English command search and command-line settings backups.
 
 ### Added
+- The window switcher has an optional All windows shortcut that cycles through individual windows across apps in every layout, including Large icons. Settings → Window switcher → All windows. Thanks to BrainAPP for the suggestion.
 - Dynamic Island level controls and the menu panel's mixer can be adjusted with a mouse wheel or trackpad. Thanks to @JB-OD.
 - Dynamic Island can start event countdowns 15, 30, 60 or 120 minutes before an event and keeps longer countdowns fully visible. Thanks to @Aryan-Saini.
 - An optional Zoom feature turns a modifier and mouse-wheel movement into app zoom or pinch gestures, with separate controls and scroll exceptions. Thanks to @ahmadhatahet.
