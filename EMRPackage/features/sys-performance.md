@@ -1,6 +1,6 @@
 # Sys Performance
 
-Top-level menu label: **Sys Performance -emr**.
+Top-level menu label: triangular emr icon followed by **Sys Performance**.
 
 Feature ID: `sys-performance`; island module ID: `system`.
 
@@ -8,7 +8,7 @@ Feature ID: `sys-performance`; island module ID: `system`.
 - Values with a real capacity use consumed/capacity colours: green below 60%,
   yellow 60–79%, orange 80–89%, red from 90%.
 - Values without a known capacity use a saved colour selected under
-  Settings → Dynamic Island → Content → **Sys Performance -emr**.
+  Settings → Dynamic Island → Content → **Sys Performance**.
 - ChatGPT · Codex replaces Connected Devices: remaining reported session and
   weekly allowance, plus today's locally recorded tokens (including cache).
   These are Codex limits on the user's plan, not ChatGPT chat/message limits.

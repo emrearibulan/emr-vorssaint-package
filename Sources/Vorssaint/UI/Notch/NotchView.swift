@@ -832,7 +832,7 @@ extension NotchModule: PanelOrderItem {
         case .files: return FeatureStrings.notch(language).files
         case .system:
             #if ISLAND_MONITOR_LOCAL
-            return EmrFeatureLabel.topLevel("Sys Performance")
+            return "Sys Performance"
             #else
             return FeatureStrings.notch(language).system
             #endif

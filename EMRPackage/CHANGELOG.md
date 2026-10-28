@@ -1,5 +1,13 @@
 # emr package changelog
 
+## 0.2.4 — 28 October 2026
+
+- Replaced the text suffix with a minimal monochrome emr mark before top-level feature titles.
+- Arranged lowercase e above m r to form a triangle, with no enclosing border.
+- Restored plain Sys Performance and App shortcuts names for search and accessibility.
+- Reused the mark in section menus, settings headings and the app-shortcut chooser group; individual apps and child controls stay unbranded.
+- Updated the README, catalogue and maintenance convention for future additions. Saved settings and stable IDs are unchanged.
+
 ## 0.2.3 — 28 October 2026
 
 - Tagged top-level emr additions as **Sys Performance -emr** and **App shortcuts -emr**.

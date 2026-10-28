@@ -189,7 +189,7 @@ struct NotchSystemView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
         .accessibilityAction { activate(card) }
-        .help(card.hint.isEmpty ? "Colour shows consumed capacity: green <60%, amber 60–79%, orange 80–89%, red ≥90%. Readings without capacity use the colour chosen in Settings → Dynamic Island → Content → Sys Performance -emr." : card.hint)
+        .help(card.hint.isEmpty ? "Colour shows consumed capacity: green <60%, amber 60–79%, orange 80–89%, red ≥90%. Readings without capacity use the colour chosen in Settings → Dynamic Island → Content → Sys Performance." : card.hint)
         .accessibilityLabel(card.title)
         .accessibilityValue([card.value, card.detail].compactMap { $0 }.joined(separator: ", "))
     }

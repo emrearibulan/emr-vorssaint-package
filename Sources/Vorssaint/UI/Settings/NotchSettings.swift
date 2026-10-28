@@ -685,10 +685,10 @@ struct NotchSettings: View {
                         Text(text.panel).tag(NotchReopeningDestination.appPanel.rawValue)
                         Text(text.sectionsTitle).tag(NotchReopeningDestination.explore.rawValue)
                         ForEach(NotchSupport.modules()) { module in
-                            Text(module.title(l10n.language)).tag(module.rawValue)
+                            module.featureTitle(l10n.language).tag(module.rawValue)
                         }
                         if let saved = NotchModule(rawValue: homeModule), !NotchSupport.modules().contains(saved) {
-                            Text(saved.title(l10n.language)).tag(homeModule).disabled(true)
+                            saved.featureTitle(l10n.language).tag(homeModule).disabled(true)
                         }
                     }
                     .pickerStyle(.menu)

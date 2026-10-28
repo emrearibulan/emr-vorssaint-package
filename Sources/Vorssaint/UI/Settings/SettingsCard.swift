@@ -8,17 +8,19 @@ import SwiftUI
 /// pages read as one design.
 struct SettingsCard<Content: View>: View {
     let title: String?
+    let emrFeature: Bool
     let content: Content
 
-    init(title: String? = nil, @ViewBuilder content: () -> Content) {
+    init(title: String? = nil, emrFeature: Bool = false, @ViewBuilder content: () -> Content) {
         self.title = title
+        self.emrFeature = emrFeature
         self.content = content()
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 13) {
             if let title {
-                Text(title).font(.headline)
+                EmrFeatureLabel.topLevel(title, branded: emrFeature).font(.headline)
             }
             content
         }

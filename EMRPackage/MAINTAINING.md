@@ -45,12 +45,15 @@ that custom UI changes will merge unchanged forever.
 
 ## Adding another feature
 
-Top-level feature labels added by emr must use the exact suffix ` -emr` (one space
-before the hyphen, none after it). Use `EmrFeatureLabel.topLevel(name)` only for
-that level and record `menuTitle: "<name> -emr"` in the package catalogue. Keep
-base feature names and stable IDs unchanged. Do not tag individual app/game
-names, child controls or dialog titles. The release documentation check validates
-the catalogue labels, and README navigation paths must use the displayed titles.
+Top-level feature labels added by emr show the monochrome triangular emr mark
+before their plain title. Use `EmrFeatureLabel.topLevel(name)` for a feature
+heading, or `module.featureTitle(language)` for a registered island section.
+The shared template image follows the surrounding text colour. Add the island
+module to `NotchModule.isEmrFeature` when registering another package section.
+Use `menuTitle: "<name>"` and `menuIcon: "emr-triangle"` in the catalogue.
+Keep accessible/searchable feature names and stable IDs plain. Do not add the
+mark to individual app/game names, child controls or dialog titles. The release
+documentation check validates this catalogue convention.
 
 1. Create `emr/feature-name` from `emr/package`.
 2. Keep services, views and settings focused; reuse the upstream feature catalogue
@@ -64,7 +67,7 @@ the catalogue labels, and README navigation paths must use the displayed titles.
 5. Add meaningful tests and extend emr package CI for the new behavior.
 6. Bump the package version, test, and release the whole package together.
 
-The current catalogue contains one feature; it is deliberately a package catalogue
+The current catalogue contains two features; it is deliberately a package catalogue
 rather than a downloader for arbitrary third-party scripts/plugins.
 
 ## Publishing a source release

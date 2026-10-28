@@ -297,7 +297,7 @@ struct NotchSectionListRow: View {
                 Button(action: select) {
                     HStack(spacing: 8) {
                         NotchSectionTile(module: module, shown: included && available, side: 22)
-                        Text(title)
+                        module.featureTitle(l10n.language)
                             .font(.system(size: 12.5, weight: selected ? .semibold : .regular))
                             .foregroundStyle(available ? .primary : .secondary)
                             .lineLimit(2)
@@ -346,7 +346,7 @@ struct NotchSectionHeader: View {
         HStack(alignment: .top, spacing: 12) {
             NotchSectionTile(module: module, shown: shown, side: 38)
             VStack(alignment: .leading, spacing: 3) {
-                Text(module.title(l10n.language)).font(.title3.weight(.semibold))
+                module.featureTitle(l10n.language).font(.title3.weight(.semibold))
                 Text(editor.summary(module))
                     .font(.callout)
                     .foregroundStyle(.secondary)

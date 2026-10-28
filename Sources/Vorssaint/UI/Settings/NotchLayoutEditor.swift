@@ -381,7 +381,7 @@ struct NotchActionChooser: View {
                             .foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 120)
                     }
                     group(editor.sectionActions, actions: [.explore, .settings] + NotchModule.allCases.map(NotchQuickAction.module))
-                    group(EmrFeatureLabel.topLevel("App shortcuts"), actions: NotchQuickAction.applicationActions())
+                    group("App shortcuts", actions: NotchQuickAction.applicationActions(), emrFeature: true)
                     group(editor.quickActions, actions: [.pin] + NotchControlItem.allCases.filter { !$0.isLevel }.map(NotchQuickAction.control))
                 }.padding(2)
             }.frame(height: 200)
@@ -395,15 +395,23 @@ struct NotchActionChooser: View {
         return term.isEmpty || CommandBarSearch.normalized(action.title(l10n) + " " + action.id).contains(term)
     }
 
-    @ViewBuilder private func group(_ title: String, actions: [NotchQuickAction]) -> some View {
+    @ViewBuilder private func group(_ title: String, actions: [NotchQuickAction], emrFeature: Bool = false) -> some View {
         let matches = actions.filter(matchesQuery)
         if !matches.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
-                Text(title).font(.caption).foregroundStyle(.secondary)
+                EmrFeatureLabel.topLevel(title, branded: emrFeature).font(.caption).foregroundStyle(.secondary)
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
                     ForEach(matches) { action in
                         Button { choose(action) } label: {
-                            Label(action.title(l10n), systemImage: action.symbol)
+                            Label {
+                                if case .module(let module) = action {
+                                    module.featureTitle(l10n.language)
+                                } else {
+                                    Text(action.title(l10n))
+                                }
+                            } icon: {
+                                Image(systemName: action.symbol)
+                            }
                                 .font(.system(size: 11)).lineLimit(2)
                                 .frame(maxWidth: .infinity, minHeight: 38, alignment: .leading).padding(.horizontal, 8)
                                 .background(selected == action ? Color.accentColor.opacity(0.14) : Color.secondary.opacity(0.07), in: RoundedRectangle(cornerRadius: 9))
