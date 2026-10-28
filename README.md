@@ -4,15 +4,17 @@
 
 emr package is an open-source collection built from [Vorssaint](https://github.com/vorssaint/vorssaint-utils). It runs in a separate companion app called **Island Monitor**, alongside the official app. This keeps the official Vorssaint updater and the custom features on independent update paths.
 
-**Version:** 0.2.4 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
+**Version:** 0.2.5 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
 
 [Install](#install-from-source) · [Use](#first-launch) · [Update](#updates) · [Troubleshooting](#troubleshooting) · [Release history](EMRPackage/CHANGELOG.md)
 
 ## Features
 
-Top-level features added by emr show a small, monochrome **triangular emr icon before the title**: **Sys Performance** and **App shortcuts**. The mark places lowercase **e** above **m r**, with no border. It follows the menu text colour. Only this feature level carries the icon; app/game names, buttons and other child controls keep their own labels. Future package additions follow the same rule. Search and VoiceOver use the plain feature names.
+Top-level features added by emr show a **triangular emr icon before the title**: **Sys Performance** and **App shortcuts**. The supplied logo places lowercase **emr** across an outlined triangle. Its background is transparent, and it renders light on dark UI surfaces and dark on light surfaces for contrast. Only this feature level carries the icon; app/game names, buttons and other child controls keep their own labels. Future package additions follow the same rule. Search and VoiceOver use the plain feature names.
 
-<img src="EMRPackage/assets/emr-mark.svg" width="36" height="36" alt="emr mark: e above m r">
+<img src="EMRPackage/assets/emr-mark.svg" width="48" height="41" alt="emr logo: lowercase emr across an outlined triangle">
+
+The [original transparent PNG](EMRPackage/assets/emr-mark.png) is bundled unchanged; the SVG above is an adaptive preview of the same silhouette.
 
 ### 1. [Sys Performance](EMRPackage/features/sys-performance.md)
 
@@ -103,7 +105,7 @@ xcrun swiftc --version
 Quit **Island Monitor** if an earlier version is running. Choose a source folder in Terminal and run:
 
 ```sh
-git clone --depth 1 --branch emr-v0.2.4 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.2.5 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```

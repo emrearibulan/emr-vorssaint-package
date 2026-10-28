@@ -45,10 +45,13 @@ that custom UI changes will merge unchanged forever.
 
 ## Adding another feature
 
-Top-level feature labels added by emr show the monochrome triangular emr mark
+Top-level feature labels added by emr show the supplied emr triangle logo
 before their plain title. Use `EmrFeatureLabel.topLevel(name)` for a feature
 heading, or `module.featureTitle(language)` for a registered island section.
-The shared template image follows the surrounding text colour. Add the island
+The original transparent PNG lives at `EMRPackage/assets/emr-mark.png` and is
+copied into the companion by `build-dashboard.sh`. The shared template renders
+light on dark UI and dark on light UI; never add an opaque background.
+The SVG is a theme-aware documentation preview of the same source silhouette. Add the island
 module to `NotchModule.isEmrFeature` when registering another package section.
 Use `menuTitle: "<name>"` and `menuIcon: "emr-triangle"` in the catalogue.
 Keep accessible/searchable feature names and stable IDs plain. Do not add the

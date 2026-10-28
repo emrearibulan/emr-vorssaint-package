@@ -26,7 +26,7 @@ for feature in data["features"]:
     link = "EMRPackage/" + feature["documentation"]
     if f'[{feature["name"]}]({link})' not in readme or not (root / link).is_file():
         errors.append("Document the bundled feature in README: " + feature["name"])
-if "triangular emr icon before the title" not in readme or not (root / "EMRPackage/assets/emr-mark.svg").is_file():
+if "triangular emr icon before the title" not in readme or not all((root / ("EMRPackage/assets/emr-mark." + ext)).is_file() for ext in ("svg", "png")):
     errors.append("Document and include the triangular emr feature mark")
 if errors:
     sys.exit("Release documentation needs attention:\n- " + "\n- ".join(errors))

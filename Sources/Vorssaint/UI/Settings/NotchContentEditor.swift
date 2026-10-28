@@ -296,8 +296,10 @@ struct NotchSectionListRow: View {
                     .disabled(!available)
                 Button(action: select) {
                     HStack(spacing: 8) {
-                        NotchSectionTile(module: module, shown: included && available, side: 22)
-                        module.featureTitle(l10n.language)
+                        if !module.isEmrFeature {
+                            NotchSectionTile(module: module, shown: included && available, side: 22)
+                        }
+                        module.featureTitle(l10n.language, markSize: 22)
                             .font(.system(size: 12.5, weight: selected ? .semibold : .regular))
                             .foregroundStyle(available ? .primary : .secondary)
                             .lineLimit(2)

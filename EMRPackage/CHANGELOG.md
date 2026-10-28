@@ -1,5 +1,12 @@
 # emr package changelog
 
+## 0.2.5 — 28 October 2026
+
+- Replaced the stacked-letter mark with the supplied lowercase emr logo across an outlined triangle.
+- Bundled the original transparent PNG unchanged and rendered its silhouette with adaptive UI contrast.
+- Removed outer source padding in the UI and sized the mark for feature headings and island tiles.
+- Updated the README preview and asset-maintenance instructions. Feature names, saved preferences and stable IDs remain unchanged.
+
 ## 0.2.4 — 28 October 2026
 
 - Replaced the text suffix with a minimal monochrome emr mark before top-level feature titles.

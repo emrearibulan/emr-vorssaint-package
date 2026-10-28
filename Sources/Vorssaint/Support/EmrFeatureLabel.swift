@@ -3,20 +3,20 @@
 import AppKit
 import SwiftUI
 
-/// The small, monochrome package mark: e above m r, with no enclosing border.
-/// Drawing at the requested resolution keeps the native template crisp on Retina.
+/// User-supplied emr wordmark across an outlined triangle. The source PNG has
+/// real alpha; a template makes the original silhouette visible in either theme.
 enum EmrFeatureLabel {
     static let mark: NSImage = {
-        let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
-            let attributes: [NSAttributedString.Key: Any] = [
-                .font: NSFont.systemFont(ofSize: 9, weight: .semibold),
-                .foregroundColor: NSColor.black
-            ]
-            for (letter, x, y): (String, CGFloat, CGFloat) in [("e", 9, 8), ("m", 4.5, 0), ("r", 13.5, 0)] {
-                let glyph = letter as NSString
-                let width = glyph.size(withAttributes: attributes).width
-                glyph.draw(at: NSPoint(x: x - width / 2, y: y), withAttributes: attributes)
-            }
+        guard let url = Bundle.main.url(forResource: "EmrFeatureMark", withExtension: "png"),
+              let source = NSImage(contentsOf: url) else {
+            return NSImage(systemSymbolName: "triangle", accessibilityDescription: nil)!
+        }
+        // Display the alpha bounds of the 1254px source, omitting outer padding.
+        // AppKit uses a bottom-left origin. The original asset stays untouched.
+        let crop = NSRect(x: 97, y: 201, width: 1058, height: 899)
+        let image = NSImage(size: NSSize(width: 20, height: 20 * crop.height / crop.width), flipped: false) { rect in
+            source.draw(in: rect, from: crop, operation: .sourceOver, fraction: 1,
+                        respectFlipped: true, hints: [.interpolation: NSImageInterpolation.high])
             return true
         }
         image.isTemplate = true
@@ -25,12 +25,14 @@ enum EmrFeatureLabel {
 
     /// Only top-level feature titles get the mark. Keep searchable and spoken
     /// names plain; individual apps, controls and dialog titles are unbranded.
-    @ViewBuilder static func topLevel(_ name: String, branded: Bool = true, markSize: CGFloat = 16) -> some View {
+    @ViewBuilder static func topLevel(_ name: String, branded: Bool = true, markSize: CGFloat = 20) -> some View {
         if branded {
             HStack(spacing: 5) {
                 Image(nsImage: mark)
                     .renderingMode(.template)
                     .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.primary)
                     .frame(width: markSize, height: markSize)
                     .accessibilityHidden(true)
                 Text(name)
@@ -52,7 +54,7 @@ extension NotchModule {
         #endif
     }
 
-    func featureTitle(_ language: AppLanguage, markSize: CGFloat = 16) -> some View {
+    func featureTitle(_ language: AppLanguage, markSize: CGFloat = 20) -> some View {
         EmrFeatureLabel.topLevel(title(language), branded: isEmrFeature, markSize: markSize)
     }
 }
