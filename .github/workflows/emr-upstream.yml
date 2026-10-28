@@ -1,4 +1,4 @@
-name: EMR upstream release check
+name: emr upstream release check
 on:
   schedule:
     - cron: '17 3 * * *'

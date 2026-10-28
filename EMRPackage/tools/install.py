@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build EMR Package locally and optionally install the official, notarized app."""
+"""Build emr package locally and optionally install the official, notarized app."""
 import argparse
 import hashlib
 import json
@@ -67,7 +67,7 @@ def install_official(folder, data):
         print("Official Vorssaint is already installed; keeping its current app and updater.")
         return
     request = Request("https://api.github.com/repos/vorssaint/vorssaint-utils/releases/latest",
-                      headers={"User-Agent": "EMR-Package-source-installer"})
+                      headers={"User-Agent": "emr-package-source-installer"})
     with urlopen(request, timeout=60) as response:
         release = json.load(response)
     if release.get("draft") or release.get("prerelease"):
@@ -81,7 +81,7 @@ def install_official(folder, data):
         temp = Path(temporary)
         dmg = temp / "Vorssaint.dmg"
         print("Downloading official Vorssaint", release["tag_name"])
-        with urlopen(Request(url, headers={"User-Agent": "EMR-Package-source-installer"}), timeout=120) as response:
+        with urlopen(Request(url, headers={"User-Agent": "emr-package-source-installer"}), timeout=120) as response:
             with dmg.open("wb") as handle:
                 shutil.copyfileobj(response, handle)
         digest = asset.get("digest")
@@ -150,7 +150,7 @@ def main():
     args = parser.parse_args()
     data = metadata()
     folder = application_directory()
-    print(f"EMR Package {data['version']} — source build; features: " + ", ".join(x["name"] for x in data["features"]))
+    print(f"emr package {data['version']} — source build; features: " + ", ".join(x["name"] for x in data["features"]))
     print("Companion destination:", folder / (data["app"]["name"] + ".app"))
     print("Official Vorssaint:", "keep existing app and its updater" if official_installed() else
           "install latest official stable release" if args.with_vorssaint else "not installed; companion can run on its own")
@@ -173,7 +173,7 @@ def main():
     installed = install_companion(source, folder, data)
     print("Installed:", installed)
     print("If Vorssaint's original Dynamic Island is enabled, turn it off in Vorssaint Settings to avoid overlap.")
-    print("The official app keeps updating normally. EMR Package settings are separate and preserved between builds.")
+    print("The official app keeps updating normally. emr package settings are separate and preserved between builds.")
     if not args.no_launch:
         run(["/usr/bin/open", installed])
 

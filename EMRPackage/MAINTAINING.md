@@ -1,4 +1,4 @@
-# Maintaining EMR Package
+# Maintaining emr package
 
 ## Source and release model
 
@@ -16,7 +16,7 @@ maintainer's bundle ID and signing team. Future signing-team changes need review
 
 ## Following Vorssaint releases
 
-The daily `EMR upstream release check` workflow runs from the repository's default
+The daily `emr upstream release check` workflow runs from the repository's default
 `emr/package` branch. It checks the latest stable upstream release, and does nothing
 while the package already follows it. When a new tag appears it:
 
@@ -54,7 +54,7 @@ that custom UI changes will merge unchanged forever.
    does not implement or enable an arbitrary feature.
 4. Give each new preference a registered, backup-compatible key. Preserve existing
    choices during migrations; do not reset all preferences at a package update.
-5. Add meaningful tests and extend EMR Package CI for the new behavior.
+5. Add meaningful tests and extend emr package CI for the new behavior.
 6. Bump the package version, test, and release the whole package together.
 
 The current catalogue contains one feature; it is deliberately a package catalogue
@@ -65,7 +65,7 @@ rather than a downloader for arbitrary third-party scripts/plugins.
 Use a new `emr-vMAJOR.MINOR.PATCH` tag on a tested package commit. Match package.json,
 write release notes, and create a stable GitHub release with that tag. Friends
 install from the tagged source; `EMRPackage/update.command` fetches the latest
-published EMR source release and builds it locally. Quit the running companion
+published emr source release and builds it locally. Quit the running companion
 before updating. Its preferences stay in the same domain and its previous app is
 restored if final installation verification fails.
 
@@ -75,7 +75,7 @@ For example, after tests have passed:
 git tag emr-v0.1.1
 git push origin emr-v0.1.1
 gh release create emr-v0.1.1 --repo emrearibulan/emr-vorssaint-package \
-  --title 'EMR Package 0.1.1' --notes-file release-notes.md
+  --title 'emr package 0.1.1' --notes-file release-notes.md
 ```
 
 No Apple Developer credentials are embedded, created or required for source builds.

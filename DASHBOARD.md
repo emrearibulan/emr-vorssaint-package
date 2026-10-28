@@ -81,7 +81,7 @@ Colour-setting update:
   network and power values in the selected colour and that the chosen value is
   saved to the companion's preferences. The user's chosen colour was preserved.
 
-## EMR Package source distribution
+## emr package source distribution
 
 The content entry is now **Sys Performance - emr**. The package repository is
 https://github.com/emrearibulan/emr-vorssaint-package, development branch

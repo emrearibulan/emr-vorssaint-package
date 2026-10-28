@@ -1,9 +1,9 @@
-# EMR Package for Vorssaint
+# emr package for Vorssaint
 
 A personal, open-source package of Mac features, starting with **Sys Performance - emr**.
 It runs in the **Island Monitor** companion alongside the official Vorssaint app.
 
-**Vorssaint keeps its normal official updates. Your EMR features and settings live
+**Vorssaint keeps its normal official updates. Your emr features and settings live
 in the separate companion.** Existing Vorssaint users can add the package; a fresh
 installation can install the latest official Vorssaint app and this package together.
 
@@ -35,7 +35,7 @@ installation first. The build takes several minutes; allow several gigabytes of 
 Quit an existing Island Monitor before replacing it. Clone the published source:
 
 ```sh
-git clone --depth 1 --branch emr-v0.1.0 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.1.1 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```
@@ -45,7 +45,7 @@ The installer builds the companion locally, checks it, and installs it in
 Vorssaint installation, permissions or updater. If the original Dynamic Island is
 on, turn it off in **Vorssaint → Settings → Dynamic Island** to avoid two islands.
 
-### New Vorssaint installation, with EMR Package included
+### New Vorssaint installation, with emr package included
 
 Use the same clone commands, then run:
 
@@ -69,7 +69,7 @@ Content → Sys Performance - emr. Changes appear immediately and are retained.
 
 - Update official Vorssaint through its normal updater or Homebrew.
 - Quit Island Monitor, then run `./EMRPackage/update.command` in your source checkout
-  to fetch and build the latest published EMR package. Existing colour choices remain.
+  to fetch and build the latest published emr package. Existing colour choices remain.
 - To follow development rather than a release, use branch `emr/package`.
 
 The daily upstream workflow prepares tested update branches for review. New
@@ -98,4 +98,4 @@ python3 -m unittest discover -s EMRPackage/tests -v
 
 See [the maintenance guide](EMRPackage/MAINTAINING.md), [implementation notes](DASHBOARD.md),
 and upstream [contribution guidance](CONTRIBUTING.md). Original source and copyright:
-Vorssaint, GPL-3.0-or-later. EMR customizations are distributed under the same license.
+Vorssaint, GPL-3.0-or-later. emr customizations are distributed under the same license.

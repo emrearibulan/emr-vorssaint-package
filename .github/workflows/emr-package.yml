@@ -1,4 +1,4 @@
-name: EMR Package
+name: emr package
 on:
   push:
     branches: [emr/package]

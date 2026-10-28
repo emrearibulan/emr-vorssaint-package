@@ -8,7 +8,7 @@ import json, re
 package = json.loads(Path("EMRPackage/package.json").read_text())
 version = package["version"]
 if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
-    raise SystemExit("Invalid EMR package version")
+    raise SystemExit("Invalid emr package version")
 s=Path('build.sh').read_text()
 def replace_once(old, new):
     global s

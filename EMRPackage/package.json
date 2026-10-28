@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "emr-package",
-  "name": "EMR Package",
-  "version": "0.1.0",
+  "name": "emr package",
+  "version": "0.1.1",
   "repository": "emrearibulan/emr-vorssaint-package",
   "developmentBranch": "emr/package",
   "app": {

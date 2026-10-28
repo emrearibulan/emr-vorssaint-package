@@ -49,7 +49,7 @@ git push -u origin "$EMR_BRANCH"
 EMR_BODY=$(mktemp)
 trap 'rm -f "$EMR_BODY"' EXIT
 cat > "$EMR_BODY" <<BODY
-Update the EMR Package source base from $EMR_CURRENT to official Vorssaint $EMR_LATEST.
+Update the emr package source base from $EMR_CURRENT to official Vorssaint $EMR_LATEST.
 
 The companion was built and its self-test, focused usage checks, installer tests,
 and Dynamic Island/settings regressions passed before this branch was pushed.
