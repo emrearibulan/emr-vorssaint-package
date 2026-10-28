@@ -37,7 +37,7 @@ class InstallerTests(unittest.TestCase):
         return subprocess.CompletedProcess(args, 0)
 
     def test_real_catalog_is_valid(self):
-        self.assertEqual(self.data["features"][0]["name"], "Sys Performance - emr")
+        self.assertEqual(self.data["features"][0]["name"], "Sys Performance")
         self.assertEqual(len(self.data["upstream"]["commit"]), 40)
 
     def test_only_official_release_asset_origin_is_accepted(self):

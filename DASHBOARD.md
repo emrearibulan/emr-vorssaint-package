@@ -14,7 +14,7 @@ a real denominator is available: green <60%, yellow 60–79%, orange 80–89%, r
 by its consumed complement, so nearly full storage and an almost empty battery
 turn red. Power uses the reported adapter rating, when available. Fans use the
 reported maximum RPM. Network throughput and other readings with no known
-capacity use a colour selected in Settings → Dynamic Island → Content → Sys Performance - emr,
+capacity use a colour selected in Settings → Dynamic Island → Content → Sys Performance,
 under “Colour for readings without capacity”. White is the default. The picker
 updates both the live dashboard and its settings preview immediately, including
 secondary readings such as network upload speed. “Reset to white” restores the
@@ -72,7 +72,7 @@ Base dashboard build:
 
 Colour-setting update:
 
-- Added a native colour picker in Dynamic Island → Content → Sys Performance - emr, with an
+- Added a native colour picker in Dynamic Island → Content → Sys Performance, with an
   immediate preview and a reset-to-white action. The preference participates in
   settings export/import through the registered defaults.
 - Settings regression suite passed: 534 checks. Rebuilt app self-test passed and
@@ -83,7 +83,7 @@ Colour-setting update:
 
 ## emr package source distribution
 
-The content entry is now **Sys Performance - emr**. The package repository is
+The content entry is now **Sys Performance**. The package repository is
 https://github.com/emrearibulan/emr-vorssaint-package, development branch
 `emr/package`. See README.md and EMRPackage/MAINTAINING.md for install/update
 commands, the feature catalogue and upstream-release review workflow.

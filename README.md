@@ -1,6 +1,6 @@
 # emr package for Vorssaint
 
-A personal, open-source package of Mac features, starting with **Sys Performance - emr**.
+A personal, open-source package of Mac features, starting with **Sys Performance**.
 It runs in the **Island Monitor** companion alongside the official Vorssaint app.
 
 **Vorssaint keeps its normal official updates. Your emr features and settings live
@@ -14,7 +14,7 @@ its own name, icon, bundle ID, settings and update process.
 
 ## Included now
 
-**[Sys Performance - emr](EMRPackage/features/sys-performance.md)** adds live hardware
+**[Sys Performance](EMRPackage/features/sys-performance.md)** adds live hardware
 readings, consumption-based colours, a colour picker for readings without capacity,
 and a ChatGPT · Codex tile showing remaining session/weekly allowance and local
 daily token totals. No account information or personal settings are bundled.
@@ -35,7 +35,7 @@ installation first. The build takes several minutes; allow several gigabytes of 
 Quit an existing Island Monitor before replacing it. Clone the published source:
 
 ```sh
-git clone --depth 1 --branch emr-v0.1.1 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.1.2 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```
@@ -64,8 +64,8 @@ the companion's General settings if desired.
 ## Use and update
 
 Open **Island Monitor** from Applications. Its System content entry is named
-**Sys Performance - emr**. The colour picker lives at Settings → Dynamic Island →
-Content → Sys Performance - emr. Changes appear immediately and are retained.
+**Sys Performance**. The colour picker lives at Settings → Dynamic Island →
+Content → Sys Performance. Changes appear immediately and are retained.
 
 - Update official Vorssaint through its normal updater or Homebrew.
 - Quit Island Monitor, then run `./EMRPackage/update.command` in your source checkout
@@ -79,7 +79,7 @@ one-click download.
 
 ## Share with a friend
 
-> I made an optional Mac feature package for Vorssaint. It adds a “Sys Performance - emr”
+> I made an optional Mac feature package for Vorssaint. It adds a “Sys Performance”
 > dashboard with hardware colours and Codex usage. It can be added to an existing
 > Vorssaint install, or install both from scratch. Apple Silicon + Xcode Command Line
 > Tools are required because this version builds from source:
