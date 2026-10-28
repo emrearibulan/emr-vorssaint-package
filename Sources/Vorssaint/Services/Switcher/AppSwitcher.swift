@@ -953,6 +953,7 @@ final class AppSwitcher: ObservableObject {
                 groupByApp: groupByApp,
                 preservingGroupedWindows: preservesGroupedWindows,
                 snapshot: enumerationSnapshot,
+                windowsOnly: requested.scope == .allWindows,
                 displayScope: displayScope,
                 scopedToFrontmostPID: requested.scope == .frontmostApp ? reportedFrontPID : nil,
                 resolveSource: { items in
