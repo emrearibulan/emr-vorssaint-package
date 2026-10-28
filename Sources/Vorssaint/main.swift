@@ -5,6 +5,9 @@ import AppKit
 
 SuperKeyMappingGuard.runIfRequestedAndExit()
 Defaults.register()
+#if ISLAND_MONITOR_LOCAL
+DashboardLocalProfile.prepare()
+#endif
 NotchControlItem.keyboardLightIsSupported = { BrightnessService.keyboardLightIsSupported }
 MouseAccelerationGuard.runIfRequestedAndExit()
 MouseAccelerationService.recoverPendingAtLaunch()
@@ -32,4 +35,11 @@ if NotchPresentationProbe.isRequested(by: CommandLine.arguments) {
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate
+#if ISLAND_MONITOR_LOCAL
+if CommandLine.arguments.contains("--show-dashboard") {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        NotchService.shared.open(.system, pinned: true)
+    }
+}
+#endif
 app.run()

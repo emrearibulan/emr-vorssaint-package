@@ -166,7 +166,7 @@ struct NotchPagePreview: View {
         case .captures:
             RecentCapturesView(onClose: nil, notchSize: size).notchBand(trailing: { NotchClearCapturesButton() })
         case .files: NotchFilesView(service: notch)
-        case .system: NotchSystemView(size: size) { _ in }
+        case .system: NotchSystemView(size: size, select: { _ in }, showAgents: {})
         case .tools: QuickLauncherView(notchSize: size)
         case .scratchpad: NotchScratchpadStill()
         case .agents:

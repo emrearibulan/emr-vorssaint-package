@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "emr-package",
+  "name": "EMR Package",
+  "version": "0.1.0",
+  "repository": "emrearibulan/emr-vorssaint-package",
+  "developmentBranch": "emr/package",
+  "app": {
+    "name": "Island Monitor",
+    "executable": "IslandMonitor",
+    "bundleIdentifier": "local.emre.islandmonitor.dev"
+  },
+  "upstream": {
+    "repository": "vorssaint/vorssaint-utils",
+    "tag": "v3.4.2",
+    "commit": "833967fd45153fc9dc95651d34c867f5c4aee7f1",
+    "officialBundleIdentifier": "com.vorssaint.utils",
+    "officialTeamIdentifier": "3D485NHW29"
+  },
+  "features": [
+    {
+      "id": "sys-performance",
+      "name": "Sys Performance - emr",
+      "module": "system",
+      "enabledByDefault": true,
+      "documentation": "features/sys-performance.md"
+    }
+  ]
+}

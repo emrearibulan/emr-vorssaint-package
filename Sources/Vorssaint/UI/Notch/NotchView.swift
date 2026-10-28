@@ -592,7 +592,8 @@ struct NotchView: View {
                 }
             case .files: NotchFilesView(service: service)
             case .system:
-                NotchSystemView(size: pageSize) { service.showMetric($0) }
+                NotchSystemView(size: pageSize, select: { service.showMetric($0) },
+                                showAgents: { service.select(.agents) })
             // The launcher hands the row its own controls, which a row set
             // here would replace.
             case .tools: QuickLauncherView(notchSize: pageSize)
@@ -829,7 +830,12 @@ extension NotchModule: PanelOrderItem {
         case .clipboard: return FeatureStrings.clipboard(language).title
         case .captures: return FeatureStrings.recentCaptures(language).title
         case .files: return FeatureStrings.notch(language).files
-        case .system: return FeatureStrings.notch(language).system
+        case .system:
+            #if ISLAND_MONITOR_LOCAL
+            return "Sys Performance - emr"
+            #else
+            return FeatureStrings.notch(language).system
+            #endif
         case .tools: return FeatureStrings.notch(language).tools
         case .scratchpad: return FeatureStrings.scratchpad(language).pageTitle
         case .agents: return FeatureStrings.notchAgents(language).title

@@ -24,3 +24,8 @@ CLAUDE.md
 *.xcodeproj
 xcuserdata/
 .swiftpm/
+
+# EMR generated adapter and Python test caches
+.dashboard-build.sh
+__pycache__/
+*.pyc

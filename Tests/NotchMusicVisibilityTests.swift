@@ -169,8 +169,8 @@ enum NotchMusicVisibilityTests {
                     devices.expanded = expanded
                     devices.showingSections = showingSections
                     devices.syncVisibleConsumers()
-                    suite.expect(SystemMonitor.shared.detailNeeds.connectedDevices == (installed && expanded && !showingSections),
-                                 "USB sampling follows the visible System page and installed feature, independently of its widget")
+                    suite.expect(!SystemMonitor.shared.detailNeeds.connectedDevices,
+                                 "the customized dashboard does not poll USB devices after replacing its tile")
                 }
             }
         }

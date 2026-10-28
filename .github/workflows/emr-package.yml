@@ -1,0 +1,33 @@
+name: EMR Package
+on:
+  push:
+    branches: [emr/package]
+  pull_request:
+    branches: [emr/package]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: emr-package-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: macos-26
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Package and installer checks
+        run: |
+          python3 -m unittest discover -s EMRPackage/tests -v
+          ./EMRPackage/install.command --dry-run
+          ./Tools/test-dashboard.sh
+      - name: Build companion
+        run: ./build-dashboard.sh
+      - name: Verify packaged app
+        run: |
+          "build/stage.noindex/Island Monitor.app/Contents/MacOS/IslandMonitor" --selftest
+          codesign --verify --deep --strict "build/stage.noindex/Island Monitor.app"
+      - name: Dynamic Island and settings regressions
+        run: ./build-dashboard.sh --test-suite=notch --test-suite=settings

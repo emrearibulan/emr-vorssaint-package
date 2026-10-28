@@ -390,13 +390,15 @@ struct NotchSettings: View {
         module.isAvailable() && moduleBinding(module).wrappedValue
     }
 
-    /// The mixer, the system page and the tools arrange themselves in the island.
+    /// The mixer and tools arrange themselves in the island.
     private func hasOptions(_ module: NotchModule) -> Bool {
-        ![.mixer, .system, .tools].contains(module)
+        ![.mixer, .tools].contains(module)
     }
 
     @ViewBuilder private func moduleOptions(_ module: NotchModule) -> some View {
         switch module {
+        case .system:
+            NotchSystemSettings()
         case .controls:
             let primary = [NotchControlItem.music, .volume, .brightness, .keyboardLight]
             HStack(spacing: 10) {
@@ -528,7 +530,7 @@ struct NotchSettings: View {
         case .watch:
             NotchWatchSettingsControls()
                 .toggleStyle(TrailingSwitchToggleStyle())
-        case .mixer, .system, .tools:
+        case .mixer, .tools:
             EmptyView()
         }
     }

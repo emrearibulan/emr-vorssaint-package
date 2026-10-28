@@ -1994,7 +1994,7 @@ enum NotchSupport {
             + (hasBattery && AppFeature.monitorPower.isAvailable(in: defaults) ? 1 : 0)
             + (AppFeature.monitorPower.isAvailable(in: defaults) ? 1 : 0)
             + (fans > 0 && AppFeature.fanControl.isAvailable(in: defaults) ? 1 : 0)
-            + (AppFeature.connectedDevices.isAvailable(in: defaults) ? 1 : 0)
+            + (NotchAgentSupport.sectionShows(in: defaults) && NotchAgentSupport.providers(in: defaults).contains(.codex) ? 1 : 0)
     }
 
     /// Direct openings are dismissed explicitly, never by the pointer's

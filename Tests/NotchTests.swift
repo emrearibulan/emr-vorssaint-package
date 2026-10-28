@@ -25,12 +25,21 @@ enum NotchTests {
         defaults.set(true, forKey: AppFeature.connectedDevices.availabilityKey)
         defaults.set(false, forKey: DefaultsKey.menuBarConnectedDevices)
         suite.expect(NotchModule.system.isAvailable(in: defaults)
-                     && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 1,
-                     "connected devices alone keeps its System page and card reachable with the menu bar widget off")
+                     && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
+                     "connected devices remain available outside the customized dashboard")
         defaults.set(false, forKey: AppFeature.connectedDevices.availabilityKey)
         suite.expect(!NotchModule.system.isAvailable(in: defaults)
                      && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
                      "uninstalling connected devices removes its System page and card")
+
+        defaults.set(true, forKey: AppFeature.notchAgents.availabilityKey)
+        defaults.set(true, forKey: DefaultsKey.notchAgentsEnabled)
+        defaults.set(true, forKey: DefaultsKey.notchAgentsCodex)
+        suite.expect(NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 1,
+                     "enabled Codex usage reserves its dashboard tile")
+        defaults.set(false, forKey: DefaultsKey.notchAgentsCodex)
+        suite.expect(NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
+                     "disabling Codex removes its dashboard tile and height demand")
 
         suite.expect(NotchLayout.systemRowRanges(count: 7, width: 504) == [0..<3, 3..<5, 5..<7],
                      "seven System metrics fill balanced rows instead of leaving a nearly empty column")
