@@ -151,7 +151,7 @@ final class IslandLauncherService: ObservableObject {
 
     private func showError(_ message: String) {
         let alert = NSAlert()
-        alert.messageText = "app shortcuts"
+        alert.messageText = "App shortcuts"
         alert.informativeText = message
         alert.alertStyle = .warning
         NSApp.activate(ignoringOtherApps: true)

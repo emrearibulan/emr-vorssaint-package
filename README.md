@@ -4,7 +4,7 @@
 
 emr package is an open-source collection built from [Vorssaint](https://github.com/vorssaint/vorssaint-utils). It runs in a separate companion app called **Island Monitor**, alongside the official app. This keeps the official Vorssaint updater and the custom features on independent update paths.
 
-**Version:** 0.2.1 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
+**Version:** 0.2.2 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
 
 [Install](#install-from-source) · [Use](#first-launch) · [Update](#updates) · [Troubleshooting](#troubleshooting) · [Release history](EMRPackage/CHANGELOG.md)
 
@@ -57,11 +57,11 @@ Changes appear immediately in the dashboard and settings preview. The selection 
 
 Hardware monitoring works without Codex. Usage information requires your own local Codex installation and available records. No user account, credentials, usage history or personal colour preference is bundled.
 
-### 2. [app shortcuts](EMRPackage/features/app-shortcuts.md)
+### 2. [App shortcuts](EMRPackage/features/app-shortcuts.md)
 
 Add apps and games individually; **each app gets its own clickable side icon**, like the island's Settings button. Nothing is added or launched automatically.
 
-Open **Settings → Dynamic Island → Layout → app shortcuts**:
+Open **Settings → Dynamic Island → Layout → App shortcuts**:
 
 1. Choose **Add from CrossOver → app — bottle** for one installed CrossOver launcher, or **Add App or Game…** to select a Mac `.app`.
 2. The app's own icon appears in the first free side slot. Choose **Left**, **Right** or **Bottom** beside the app to change its position.
@@ -99,7 +99,7 @@ xcrun swiftc --version
 Quit **Island Monitor** if an earlier version is running. Choose a source folder in Terminal and run:
 
 ```sh
-git clone --depth 1 --branch emr-v0.2.1 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.2.2 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```
@@ -140,7 +140,7 @@ Source builds use local ad-hoc signing as part of the normal build. This project
 3. In **Island Monitor → Settings → Dynamic Island → Content**, keep **Sys Performance** enabled.
 4. Open the island by hovering over it or using **Open Dynamic Island** in settings. Select **Sys Performance**.
 5. Choose the colour for readings without capacity using the picker described above.
-6. Under **Layout → app shortcuts**, add your games/apps one by one and choose a side for each icon.
+6. Under **Layout → App shortcuts**, add your games/apps one by one and choose a side for each icon.
 
 A fresh companion installation enables monitoring and Codex usage with Sys Performance as its home section. Updates preserve existing choices. To start it automatically, enable **Settings → General → Launch at login** yourself.
 

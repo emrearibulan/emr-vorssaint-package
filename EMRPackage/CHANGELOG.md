@@ -1,5 +1,10 @@
 # emr package changelog
 
+## 0.2.2 — 28 October 2026
+
+- Corrected the feature name to **App shortcuts** in the app, package catalogue and README.
+- Preserved shortcut selections, side-button positions, stable IDs and dashboard preferences.
+
 ## 0.2.1 — 28 October 2026
 
 - Named the second bundled feature **app shortcuts** in settings, the layout editor, package catalogue and README.
