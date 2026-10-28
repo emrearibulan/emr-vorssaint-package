@@ -18,17 +18,5 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - name: Package and installer checks
-        run: |
-          python3 EMRPackage/tools/check-release-docs.py
-          python3 -m unittest discover -s EMRPackage/tests -v
-          ./EMRPackage/install.command --dry-run
-          ./Tools/test-dashboard.sh
-      - name: Build companion
-        run: ./build-dashboard.sh
-      - name: Verify packaged app
-        run: |
-          "build/stage.noindex/Island Monitor.app/Contents/MacOS/IslandMonitor" --selftest
-          codesign --verify --deep --strict "build/stage.noindex/Island Monitor.app"
-      - name: Dynamic Island and settings regressions
-        run: ./build-dashboard.sh --test-suite=notch --test-suite=settings
+      - name: Validate source package
+        run: ./EMRPackage/tools/validate-release.sh

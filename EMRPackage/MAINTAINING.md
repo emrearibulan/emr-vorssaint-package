@@ -62,6 +62,54 @@ rather than a downloader for arbitrary third-party scripts/plugins.
 
 ## Publishing a source release
 
+Use the repo-scoped [release-review skill](../.agents/skills/emr-release-review/SKILL.md)
+when preparing or reviewing a public release. It produces a readiness report tied
+to a full commit SHA and reuses the existing validation scripts.
+
+The **emr source release** workflow is the supported publishing path after these
+changes are merged into `emr/package`. Run it from that branch with the full
+candidate commit SHA. `draft` is the default mode; `publish` is for a public release
+the user has requested. Both modes select an existing commit on `emr/package`,
+then run the complete source-package validation on that exact commit before a
+separate job receives release-write permission.
+
+The finalizer creates a source tag and draft release, verifies the tag and
+source-only release metadata, and publishes only in `publish` mode. It refuses
+to move an existing tag or add binary assets. A matching draft can be retried;
+an already published matching release is verified without editing it. A new
+package change needs a new version and validation. Draft mode creates a remote
+tag and draft release; it is not a local dry run.
+
+For example, after the candidate is merged and its version is ready:
+
+```sh
+gh workflow run emr-release.yml --ref emr/package \
+  -f commit=FULL_40_CHARACTER_CANDIDATE_SHA -f mode=draft
+# Select mode=publish only for a requested public release.
+```
+
+`python3 EMRPackage/tools/source-release.py inspect --commit FULL_SHA` is the
+read-only preflight. `./EMRPackage/tools/validate-release.sh` runs the shared full
+validation locally without installing the app. GitHub Actions reruns it for the
+selected release commit. The finalizer is an internal workflow step and refuses
+ordinary local invocation without the successful exact-commit workflow context.
+
+Configure a branch ruleset for `emr/package` requiring the package CI `validate`
+check before merge, with the branch up to date, no routine bypass and no force
+pushes/deletions. Keep PR review requirements proportional to the available
+maintainers; do not require a second reviewer in a solo repository. Rulesets
+require repository admin access and are configured separately from these files.
+Direct repository admins can still bypass or change settings; a skill is not a
+technical access boundary. Restrict release/tag creation to the intended maintainers
+or release automation when enabling stronger enforcement.
+
+Post-release verification checks that the source tag still names the validated
+SHA, the release has the intended draft/public state, and public source archive
+links are present. A successful dry-run/build does not establish a fresh-machine
+install or complete visual review. Perform those when installation/UI changes
+make them relevant. The filename preflight blocks known private-note and credential
+paths; use review and appropriate secret scanning for content-level exposure.
+
 Use a new `emr-vMAJOR.MINOR.PATCH` tag on a tested package commit. Match package.json,
 write release notes, and create a stable GitHub release with that tag. Friends
 install from the tagged source; `EMRPackage/update.command` fetches the latest
@@ -78,14 +126,8 @@ Before tagging:
 4. Review the README from a new user's perspective; automated checks do not validate every instruction.
 5. Publish only GitHub source and release notes. Do not upload app binaries, PKGs or signing material.
 
-For example, after documentation and tests have passed:
-
-```sh
-git tag emr-v0.1.3
-git push origin emr-v0.1.3
-gh release create emr-v0.1.3 --repo emrearibulan/emr-vorssaint-package \
-  --title 'emr package 0.1.3' --notes-file release-notes.md
-```
+Use the workflow above for tagging and release creation; direct tag/publish
+commands do not run the new exact-commit validation path.
 
 The user chose GitHub source-only distribution on 28 October 2026. Do not pursue
 Apple Developer membership, Developer ID signing, notarization or binary installers

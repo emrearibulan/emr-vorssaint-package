@@ -222,6 +222,13 @@ codesign --verify --deep --strict "build/stage.noindex/Island Monitor.app"
 
 Future additions join the same versioned package. Keep feature IDs and preference keys stable, preserve user choices, and follow the [maintenance guide](EMRPackage/MAINTAINING.md). See [implementation notes](DASHBOARD.md) and inherited [contribution guidance](CONTRIBUTING.md) for more context.
 
+For a full release check, run `./EMRPackage/tools/validate-release.sh`, which runs
+the commands above. Release preparation uses the repo-scoped
+[release-review skill](.agents/skills/emr-release-review/SKILL.md). The
+[source-release workflow](EMRPackage/MAINTAINING.md#publishing-a-source-release)
+validates a full commit SHA on `emr/package` before creating a draft or an
+explicitly requested public release. Distribution remains source only.
+
 ## Credits and license
 
 Based on [Vorssaint](https://github.com/vorssaint/vorssaint-utils), with credit to its maintainer and contributors. This is an independent, unofficial source fork; the addition is not a loadable plugin for the official app.

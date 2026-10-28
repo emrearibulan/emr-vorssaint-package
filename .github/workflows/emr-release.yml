@@ -1,0 +1,72 @@
+name: emr source release
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Full 40-character commit SHA already on emr/package
+        required: true
+        type: string
+      mode:
+        description: Prepare a draft or publish a user-requested public source release
+        required: true
+        default: draft
+        type: choice
+        options: [draft, publish]
+permissions: {}
+concurrency:
+  group: emr-source-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    name: Select source candidate
+    if: github.repository == 'emrearibulan/emr-vorssaint-package' && github.ref == 'refs/heads/emr/package'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      commit: ${{ steps.select.outputs.commit }}
+      tag: ${{ steps.select.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check candidate ancestry and source metadata
+        id: select
+        env:
+          CANDIDATE: ${{ inputs.commit }}
+        run: python3 EMRPackage/tools/source-release.py inspect --commit "$CANDIDATE" --output "$GITHUB_OUTPUT"
+  validate:
+    name: Validate release candidate
+    needs: candidate
+    runs-on: macos-26
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+      - name: Validate the exact selected commit
+        run: ./EMRPackage/tools/validate-release.sh
+  release:
+    name: Create and verify source release
+    needs: [candidate, validate]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # The finalizer comes from the trusted workflow branch, not candidate input.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Finalize only the validated candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE: ${{ needs.candidate.outputs.commit }}
+          MODE: ${{ inputs.mode }}
+          EMR_VALIDATED_COMMIT: ${{ needs.candidate.outputs.commit }}
+          EMR_VALIDATION_RESULT: ${{ needs.validate.result }}
+        run: python3 EMRPackage/tools/source-release.py finalize --commit "$CANDIDATE" --mode "$MODE"

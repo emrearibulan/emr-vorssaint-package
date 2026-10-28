@@ -15,6 +15,7 @@ dist/
 
 # Local-only working notes
 AGENTS.md
+!/AGENTS.md
 CLAUDE.md
 
 # macOS noise
