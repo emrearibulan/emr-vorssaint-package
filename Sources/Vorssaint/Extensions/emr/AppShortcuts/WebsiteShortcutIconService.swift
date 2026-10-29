@@ -16,7 +16,8 @@ final class WebsiteShortcutIconService: ObservableObject {
 
     private init() {
         directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("local.emre.islandmonitor.dev/website-icons", isDirectory: true)
+            .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.vorssaint.utils", isDirectory: true)
+            .appendingPathComponent("emr/website-icons", isDirectory: true)
     }
 
     func load(_ entry: IslandLauncherEntry, refresh: Bool = false) {
