@@ -1,3 +1,10 @@
+> **emr extension development:** This branch starts from Vorssaint `main`.
+> The goal is an optional package that runs only inside the **unmodified official**
+> Vorssaint app. Patched hosts and companion apps are outside the chosen design. Current
+> upstream has no external extension interface; this branch does not yet provide
+> an installable extension. See the [extension proposal](docs/extensions/emr-extension-design.md).
+> Older emr 0.3.0 releases are companion apps and do not meet this design.
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/logo-dark.svg">
