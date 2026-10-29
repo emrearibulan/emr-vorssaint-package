@@ -2259,6 +2259,14 @@ enum NotchTests {
         defaults.set(appLayout.encoded, forKey: DefaultsKey.notchQuickAccessLayout)
         suite.expect(NotchQuickAccessConfiguration.stored(in: defaults).actions == [.settings, appAction],
                      "individual app icons preserve the existing settings button and saved layout")
+        let websiteEntry = IslandLauncherEntry(name: "Example", path: "", website: "https://example.com/docs")
+        let websiteAction = NotchQuickAction.application(websiteEntry.id)
+        defaults.set(try? JSONEncoder().encode([launcherEntry, websiteEntry]), forKey: DefaultsKey.notchLauncherEntries)
+        let mixedLayout = NotchQuickAccessConfiguration(side: .right, actions: [.settings, appAction, websiteAction])
+        defaults.set(mixedLayout.encoded, forKey: DefaultsKey.notchQuickAccessLayout)
+        suite.expect(websiteAction.isAvailable(in: defaults) && NotchQuickAction(id: websiteAction.id) == websiteAction
+                     && NotchQuickAccessConfiguration.stored(in: defaults).actions == [.settings, appAction, websiteAction],
+                     "website actions coexist with existing apps and settings using stable saved shortcut IDs")
         defaults.set(Data(), forKey: DefaultsKey.notchLauncherEntries)
         suite.expect(!appAction.isAvailable(in: defaults) && NotchQuickAction(id: "emr.app.invalid") == nil,
                      "missing and malformed app references cannot launch arbitrary targets")

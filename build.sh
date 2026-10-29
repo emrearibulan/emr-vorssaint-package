@@ -313,6 +313,7 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Notch/NotchCalendarSupport.swift
         Sources/Vorssaint/Services/Notch/NotchKeepAwakeSupport.swift
         Sources/Vorssaint/Services/Notch/IslandLauncherSupport.swift
+        Sources/Vorssaint/Support/EmrFeatureLabel.swift
         Sources/Vorssaint/Services/Notch/NotchSupport.swift
         Sources/Vorssaint/Services/Notch/NotchAudioLevelSupport.swift
         Sources/Vorssaint/Services/Notch/NotchVolumeKeyGate.swift

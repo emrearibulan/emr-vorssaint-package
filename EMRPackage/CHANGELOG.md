@@ -1,5 +1,14 @@
 # emr package changelog
 
+## 0.3.0 — 29 October 2026
+
+- Extended App shortcuts with **Add Website…** for HTTP/HTTPS destinations and optional names.
+- Open website side icons in the default browser, with the same placement, ordering and removal controls as apps.
+- Fetch website icons directly from the site and its declared icon hosts; cache colour icons locally, with refresh, contrast backing and globe fallback.
+- Keep icon discovery separate from saved page paths/queries, browser cookies, credentials and third-party favicon services. Bound redirects, response sizes and raster decoding.
+- Preserve existing app bookmarks, saved IDs and side layouts. Added legacy/mixed-entry, URL validation, icon-discovery and local-network fixture checks.
+- Updated README and feature documentation for installation and use.
+
 ## 0.2.5 — 28 October 2026
 
 - Replaced the stacked-letter mark with the supplied lowercase emr logo across an outlined triangle.

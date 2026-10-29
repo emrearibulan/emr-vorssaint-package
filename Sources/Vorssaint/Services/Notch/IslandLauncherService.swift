@@ -23,6 +23,7 @@ final class IslandLauncherService: ObservableObject {
     }
 
     func resolvedURL(_ entry: IslandLauncherEntry) -> URL? {
+        guard entry.website == nil else { return nil }
         var stale = false
         let bookmarked = try? URL(resolvingBookmarkData: entry.bookmark, options: [.withoutUI, .withoutMounting],
                                   relativeTo: nil, bookmarkDataIsStale: &stale)
@@ -33,7 +34,7 @@ final class IslandLauncherService: ObservableObject {
     }
 
     func contains(_ url: URL) -> Bool {
-        entries.contains { ($0.path == url.standardizedFileURL.path) || resolvedURL($0)?.resolvingSymlinksInPath() == url.resolvingSymlinksInPath() }
+        entries.contains { $0.website == nil && (($0.path == url.standardizedFileURL.path) || resolvedURL($0)?.resolvingSymlinksInPath() == url.resolvingSymlinksInPath()) }
     }
 
     func crossOverApps() -> [Candidate] {
@@ -53,7 +54,7 @@ final class IslandLauncherService: ObservableObject {
     }
 
     func add(_ url: URL) {
-        guard entries.count < IslandLauncherSupport.maximumItems else { showError("The launcher can hold up to 100 apps. Remove an item before adding another."); return }
+        guard entries.count < IslandLauncherSupport.maximumItems else { showError("The launcher can hold up to 100 shortcuts. Remove an item before adding another."); return }
         let url = url.standardizedFileURL
         guard url.isFileURL, url.pathExtension.lowercased() == "app",
               (try? url.resourceValues(forKeys: [.isApplicationKey]).isApplication) == true else { showError("Choose an installed Mac application (.app), including a CrossOver app launcher."); return }
@@ -62,16 +63,42 @@ final class IslandLauncherService: ObservableObject {
             let bookmark = try url.bookmarkData(options: [], includingResourceValuesForKeys: nil, relativeTo: nil)
             entries.append(IslandLauncherEntry(name: url.deletingPathExtension().lastPathComponent, path: url.path, bookmark: bookmark))
             save()
-            let layout = NotchQuickAccessConfiguration.stored()
-            if let side = [NotchQuickAccessSide.right, .left, .bottom].first(where: { layout.hasRoom(on: $0) }), let entry = entries.last {
-                place(entry.id, on: side)
-            } else {
-                showError("App saved. All side-button slots are occupied. Remove a button in the layout editor, then choose a side for this app below.")
-            }
+            if let entry = entries.last { autoPlace(entry.id) }
         } catch { showError("Could not save this app: " + error.localizedDescription) }
     }
 
+    @discardableResult func addWebsite(_ input: String, name: String) -> Bool {
+        guard let url = IslandLauncherSupport.websiteURL(input) else {
+            showError("Enter a valid http or https website address without a username or password.")
+            return false
+        }
+        guard entries.count < IslandLauncherSupport.maximumItems else {
+            showError("The launcher can hold up to 100 shortcuts. Remove an item before adding another.")
+            return false
+        }
+        guard !entries.contains(where: { $0.websiteURL == url }) else {
+            showError("This website address has already been added.")
+            return false
+        }
+        let entry = IslandLauncherEntry(name: name, path: "", website: url.absoluteString)
+        entries.append(entry)
+        save()
+        autoPlace(entry.id)
+        WebsiteShortcutIconService.shared.load(entry)
+        return true
+    }
+
+    private func autoPlace(_ id: UUID) {
+        let layout = NotchQuickAccessConfiguration.stored()
+        if let side = [NotchQuickAccessSide.right, .left, .bottom].first(where: { layout.hasRoom(on: $0) }) {
+            place(id, on: side)
+        } else {
+            showError("Shortcut saved. All side-button slots are occupied. Remove a button in the layout editor, then choose a side for this shortcut below.")
+        }
+    }
+
     func remove(_ id: UUID) {
+        WebsiteShortcutIconService.shared.remove(id)
         place(id, on: nil)
         entries.removeAll { $0.id == id }
         save()
@@ -132,6 +159,13 @@ final class IslandLauncherService: ObservableObject {
     }
 
     func launch(_ entry: IslandLauncherEntry) {
+        if entry.website != nil {
+            guard let url = entry.websiteURL, NSWorkspace.shared.open(url) else {
+                showError("Could not open this website in your default browser.")
+                return
+            }
+            return
+        }
         guard let url = resolvedURL(entry) else { showError("This app has moved or was removed. Remove its launcher entry, then add it again."); return }
         // Open the exact .app wrapper; CrossOver itself owns its bottle and command.
         // Never interpolate a game name/path into a shell command.

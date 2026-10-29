@@ -10,5 +10,12 @@ if [[ ! -d "$TASK_SDK" ]]; then
 fi
 swiftc -sdk "$TASK_SDK" "${TASK_FLAGS[@]}" -module-cache-path "$PWD/build/module-cache" \
     Sources/Vorssaint/Services/Notch/IslandLauncherSupport.swift \
+    Sources/Vorssaint/Services/Notch/WebsiteShortcutSupport.swift \
     Tools/LauncherTests/LauncherTests.swift -o build/launcher-tests/launcher-tests
 build/launcher-tests/launcher-tests
+swiftc -sdk "$TASK_SDK" "${TASK_FLAGS[@]}" -module-cache-path "$PWD/build/module-cache" \
+    Sources/Vorssaint/Services/Notch/IslandLauncherSupport.swift \
+    Sources/Vorssaint/Services/Notch/WebsiteShortcutSupport.swift \
+    Sources/Vorssaint/Services/Notch/WebsiteShortcutIconService.swift \
+    Tools/LauncherTests/WebsiteIconTests.swift -o build/launcher-tests/website-icon-tests
+python3 Tools/LauncherTests/network-fixture.py build/launcher-tests/website-icon-tests

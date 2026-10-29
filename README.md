@@ -4,7 +4,7 @@
 
 emr package is an open-source collection built from [Vorssaint](https://github.com/vorssaint/vorssaint-utils). It runs in a separate companion app called **Island Monitor**, alongside the official app. This keeps the official Vorssaint updater and the custom features on independent update paths.
 
-**Version:** 0.2.5 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
+**Version:** 0.3.0 · **Source base:** Vorssaint v3.4.2 · **Distribution:** GitHub source only
 
 [Install](#install-from-source) · [Use](#first-launch) · [Update](#updates) · [Troubleshooting](#troubleshooting) · [Release history](EMRPackage/CHANGELOG.md)
 
@@ -65,18 +65,21 @@ Hardware monitoring works without Codex. Usage information requires your own loc
 
 ### 2. [App shortcuts](EMRPackage/features/app-shortcuts.md)
 
-Add apps and games individually; **each app gets its own clickable side icon**, like the island's Settings button. Nothing is added or launched automatically.
+Add apps, games and websites individually; **each shortcut gets its own clickable side icon**, like the island's Settings button. Nothing is added or launched automatically.
 
 Open **Settings → Dynamic Island → Layout → App shortcuts**:
 
-1. Choose **Add from CrossOver → app — bottle** for one installed CrossOver launcher, or **Add App or Game…** to select a Mac `.app`.
-2. The app's own icon appears in the first free side slot. Choose **Left**, **Right** or **Bottom** beside the app to change its position.
-3. Click that icon in the opened island to launch the exact app. CrossOver's own wrapper chooses its game and bottle.
-4. Use the up/down controls to reorder apps or **Remove** to remove an icon without uninstalling the app.
+1. Choose **Add from CrossOver → app — bottle** for a CrossOver launcher, or **Add App or Game…** to select a Mac `.app`.
+2. Choose **Add Website…**, enter an `https://` or `http://` address and an optional name, then click **Add**. A bare hostname defaults to HTTPS; an empty name uses the hostname.
+3. The app icon or website icon appears in the first free side slot. Choose **Left**, **Right** or **Bottom** beside the shortcut to change its position.
+4. Click an icon in the opened island to launch the exact app or open the saved website URL in your default browser. CrossOver's wrapper chooses its game and bottle.
+5. Use up/down controls to reorder shortcuts, or **Remove** to remove an entry without uninstalling an app or changing a website.
 
-The layout editor above also lets you drag buttons or choose saved apps with **+**. Each side has three slots, including hidden section buttons; move or remove unused buttons to make room. If all slots are full, a newly added app stays saved as **Not placed** until you choose a free side. Existing Settings/Explore buttons are preserved.
+Website icons are fetched directly from the site's homepage and its declared icon locations, then cached locally. A small contrasting background keeps dark or white website logos visible without recolouring them. The saved page's path/query is used when opening the shortcut; icon discovery contacts only its origin, followed by any icon host the site declares. No browser cookies, stored credentials or third-party favicon service are used. If the site is offline, blocks requests or has no supported icon, a globe appears and the shortcut still works. Use the row's **Refresh icon** button to retry or update a cached logo. Cached icons remain available offline; icon caches may be cleared by macOS. Raster PNG/ICO/JPEG/GIF and other formats supported by macOS ImageIO are supported; SVG-only icons may fall back to a globe.
 
-App selections are local to your Mac, survive restarts/updates and are not included in the shared source.
+The layout editor above also lets you drag buttons or choose saved shortcuts with **+**. Each side has three slots, including hidden section buttons; move or remove unused buttons to make room. If all slots are full, a new shortcut stays saved as **Not placed** until you choose a free side. Existing Settings/Explore buttons are preserved.
+
+App and website selections are local to your Mac, survive restarts/updates and are not included in the shared source. Website URLs cannot contain an embedded username/password; executable/custom URL schemes are rejected.
 
 ## Install from source
 
@@ -105,7 +108,7 @@ xcrun swiftc --version
 Quit **Island Monitor** if an earlier version is running. Choose a source folder in Terminal and run:
 
 ```sh
-git clone --depth 1 --branch emr-v0.2.5 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
+git clone --depth 1 --branch emr-v0.3.0 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package
 cd emr-package
 ./EMRPackage/install.command
 ```
@@ -146,7 +149,7 @@ Source builds use local ad-hoc signing as part of the normal build. This project
 3. In **Island Monitor → Settings → Dynamic Island → Content**, keep **Sys Performance** enabled.
 4. Open the island by hovering over it or using **Open Dynamic Island** in settings. Select **Sys Performance**.
 5. Choose the colour for readings without capacity using the picker described above.
-6. Under **Layout → App shortcuts**, add your games/apps one by one and choose a side for each icon.
+6. Under **Layout → App shortcuts**, add your apps, games or websites one by one and choose a side for each icon.
 
 A fresh companion installation enables monitoring and Codex usage with Sys Performance as its home section. Updates preserve existing choices. To start it automatically, enable **Settings → General → Launch at login** yourself.
 
