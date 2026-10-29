@@ -60,10 +60,15 @@ def ensure_stopped(app, executable):
 
 
 def read_preferences(domain):
+    # macOS may export a nonexistent domain as an empty plist with exit 0.
+    # Probe existence separately so backups and rollback record it correctly.
+    probe = subprocess.run(['/usr/bin/defaults', 'read', domain], capture_output=True)
+    if probe.returncode:
+        if b'does not exist' in probe.stderr.lower():
+            return None
+        raise ValueError('Cannot inspect preferences for ' + domain)
     result = subprocess.run(['/usr/bin/defaults', 'export', domain, '-'], capture_output=True)
     if result.returncode:
-        if b'does not exist' in result.stderr.lower():
-            return None
         raise ValueError('Cannot back up preferences for ' + domain)
     return plistlib.loads(result.stdout)
 

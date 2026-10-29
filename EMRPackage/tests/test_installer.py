@@ -148,6 +148,19 @@ class InstallerTests(unittest.TestCase):
         with patch.object(installer.subprocess, 'run', return_value=denied), self.assertRaises(ValueError):
             installer.read_preferences('test')
 
+    def test_mac_empty_export_does_not_turn_missing_domain_into_existing_domain(self):
+        missing = subprocess.CompletedProcess([], 1, stdout=b'', stderr=b'Domain does not exist')
+        with patch.object(installer.subprocess, 'run', return_value=missing) as command:
+            self.assertIsNone(installer.read_preferences('missing'))
+            self.assertEqual(command.call_count, 1)
+            self.assertEqual(command.call_args.args[0][1], 'read')
+
+    def test_existing_domain_is_exported_after_existence_probe(self):
+        results = [subprocess.CompletedProcess([], 0, stdout=b'{existing = 1;}', stderr=b''),
+                   subprocess.CompletedProcess([], 0, stdout=plistlib.dumps({'existing': True}), stderr=b'')]
+        with patch.object(installer.subprocess, 'run', side_effect=results):
+            self.assertEqual(installer.read_preferences('existing'), {'existing': True})
+
     def test_new_install_with_no_host_or_legacy(self):
         shutil.rmtree(self.host)
         shutil.rmtree(self.legacy)

@@ -1,5 +1,11 @@
 # emr package changelog
 
+## 0.4.1 — 29 October 2026 · fresh-profile installation
+
+- Correctly identify absent macOS preferences domains even when `defaults export` succeeds with an empty plist.
+- Record fresh-install backups accurately and preserve rollback semantics; permission/export errors still stop installation.
+- Add realistic missing-domain and existing-domain regression cases.
+
 ## 0.4.0 — 29 October 2026 · integrated Vorssaint
 
 - Rebased the source extension on current Vorssaint main at `1cdbd59b`.

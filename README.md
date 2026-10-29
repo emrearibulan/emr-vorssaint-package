@@ -5,7 +5,7 @@ one **Vorssaint.app**, one settings domain and one Dynamic Island. emr is a
 modular source extension maintained in this fork; it is not a second application
 or a runtime plugin for an untouched official binary.
 
-**Version:** 0.4.0
+**Version:** 0.4.1
 
 Upstream: [Vorssaint](https://github.com/vorssaint/vorssaint-utils), `main` at
 `1cdbd59b1c7dccd036ec1713b2ea048334990d06`. The original app's functionality,
@@ -45,7 +45,7 @@ Quit Vorssaint before installing. If you have Island Monitor, turn off its launc
 at login setting and quit it too, then use the migration command below.
 
 ```sh
-git clone --depth 1 --branch emr-v0.4.0 https://github.com/emrearibulan/emr-vorssaint-package.git vorssaint-emr
+git clone --depth 1 --branch emr-v0.4.1 https://github.com/emrearibulan/emr-vorssaint-package.git vorssaint-emr
 cd vorssaint-emr
 ./EMRPackage/install.command
 ```
