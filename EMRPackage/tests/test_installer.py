@@ -161,6 +161,16 @@ class InstallerTests(unittest.TestCase):
         with patch.object(installer.subprocess, 'run', side_effect=results):
             self.assertEqual(installer.read_preferences('existing'), {'existing': True})
 
+    def test_current_macos_missing_domain_diagnostic(self):
+        missing = subprocess.CompletedProcess([], 1, stdout=b'', stderr=b"Error: Domain 'test' not found.\n")
+        with patch.object(installer.subprocess, 'run', return_value=missing):
+            self.assertIsNone(installer.read_preferences('test'))
+
+    def test_restoring_absent_domain_accepts_already_missing_state(self):
+        missing = subprocess.CompletedProcess([], 1, stderr=b"Error: Domain 'test' not found.\nDefaults have not been changed.")
+        with patch.object(installer.subprocess, 'run', return_value=missing):
+            installer.write_preferences('test', None, self.root)
+
     def test_new_install_with_no_host_or_legacy(self):
         shutil.rmtree(self.host)
         shutil.rmtree(self.legacy)

@@ -59,12 +59,18 @@ def ensure_stopped(app, executable):
         raise ValueError('Could not check whether ' + app.stem + ' is running')
 
 
+def missing_domain(stderr, domain):
+    diagnostic = stderr.lower()
+    return (b'does not exist' in diagnostic or
+            ("domain '" + domain.lower() + "' not found").encode() in diagnostic)
+
+
 def read_preferences(domain):
     # macOS may export a nonexistent domain as an empty plist with exit 0.
     # Probe existence separately so backups and rollback record it correctly.
     probe = subprocess.run(['/usr/bin/defaults', 'read', domain], capture_output=True)
     if probe.returncode:
-        if b'does not exist' in probe.stderr.lower():
+        if missing_domain(probe.stderr, domain):
             return None
         raise ValueError('Cannot inspect preferences for ' + domain)
     result = subprocess.run(['/usr/bin/defaults', 'export', domain, '-'], capture_output=True)
@@ -76,7 +82,7 @@ def read_preferences(domain):
 def write_preferences(domain, settings, directory):
     if settings is None:
         result = subprocess.run(['/usr/bin/defaults', 'delete', domain], capture_output=True)
-        if result.returncode and b'does not exist' not in result.stderr.lower():
+        if result.returncode and not missing_domain(result.stderr, domain):
             raise ValueError('Cannot restore the absent preferences domain')
         return
     path = directory / (domain + '.import.plist')
