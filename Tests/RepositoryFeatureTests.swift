@@ -1934,9 +1934,15 @@ enum RepositoryFeatureTests {
         // on the app people actually use. CI never passes --install.
         let buildScriptCode = buildScript.components(separatedBy: "\n")
             .filter { !$0.trimmingCharacters(in: .whitespaces).hasPrefix("#") }
-        suite.expect(buildScriptCode.contains { $0.contains("(( DEV || INSTALL ))")
+        suite.expect(buildScriptCode.contains { $0.contains("(( ! EMR && (DEV || INSTALL) ))")
                                             && $0.contains("developer_id_identity") },
-               "the signing setup guard covers every install, not only the Developer variant")
+               "the signing setup guard covers upstream installs while emr explicitly opts out")
+        suite.expect(buildScriptCode.contains { $0.contains("(( EMR && (DEV || INSTALL) ))") },
+               "the emr source variant rejects direct --install and uses the backed-up installer")
+        suite.expect(buildScriptCode.contains { $0.contains("(( EMR )) && return 0") },
+               "the emr build skips Developer ID identity discovery")
+        suite.expect(buildScriptCode.contains { $0.contains("(( EMR )) && return 1") },
+               "the emr build skips legacy Keychain identity probing")
         // The setup script must run against the stock /usr/bin/openssl, which
         // is LibreSSL: it rejects OpenSSL 3's -legacy flag outright, and the
         // script once died on exactly that with its stderr discarded. The

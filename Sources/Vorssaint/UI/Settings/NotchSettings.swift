@@ -231,6 +231,7 @@ struct NotchSettings: View {
             NotchLayoutEditor(configuration: access, size: $size, width: $customWidth, height: $customHeight) {
                 selectedModule = .controls; tab = .content
             }
+            NotchLauncherSettings()
             SettingsCard(title: text.size) {
                 HStack(spacing: 10) {
                     choice(text.compact, symbol: "rectangle.compress.vertical", selected: size == NotchSize.compact.rawValue) { size = NotchSize.compact.rawValue }
@@ -395,13 +396,15 @@ struct NotchSettings: View {
         module.isAvailable() && moduleBinding(module).wrappedValue
     }
 
-    /// The mixer, the system page and the tools arrange themselves in the island.
+    /// The mixer and tools arrange themselves in the island.
     private func hasOptions(_ module: NotchModule) -> Bool {
-        ![.mixer, .system, .tools].contains(module)
+        ![.mixer, .tools].contains(module)
     }
 
     @ViewBuilder private func moduleOptions(_ module: NotchModule) -> some View {
         switch module {
+        case .system:
+            NotchSystemSettings()
         case .controls:
             let primary = [NotchControlItem.music, .volume, .brightness, .keyboardLight]
             HStack(spacing: 10) {
@@ -545,7 +548,7 @@ struct NotchSettings: View {
         case .watch:
             NotchWatchSettingsControls()
                 .toggleStyle(TrailingSwitchToggleStyle())
-        case .mixer, .system, .tools:
+        case .mixer, .tools:
             EmptyView()
         }
     }
@@ -699,10 +702,10 @@ struct NotchSettings: View {
                         Text(text.panel).tag(NotchReopeningDestination.appPanel.rawValue)
                         Text(text.sectionsTitle).tag(NotchReopeningDestination.explore.rawValue)
                         ForEach(NotchSupport.modules()) { module in
-                            Text(module.title(l10n.language)).tag(module.rawValue)
+                            module.featureTitle(l10n.language).tag(module.rawValue)
                         }
                         if let saved = NotchModule(rawValue: homeModule), !NotchSupport.modules().contains(saved) {
-                            Text(saved.title(l10n.language)).tag(homeModule).disabled(true)
+                            saved.featureTitle(l10n.language).tag(homeModule).disabled(true)
                         }
                     }
                     .pickerStyle(.menu)

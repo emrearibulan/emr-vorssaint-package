@@ -25,12 +25,21 @@ enum NotchTests {
         defaults.set(true, forKey: AppFeature.connectedDevices.availabilityKey)
         defaults.set(false, forKey: DefaultsKey.menuBarConnectedDevices)
         suite.expect(NotchModule.system.isAvailable(in: defaults)
-                     && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 1,
-                     "connected devices alone keeps its System page and card reachable with the menu bar widget off")
+                     && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
+                     "connected devices remain available outside the customized dashboard")
         defaults.set(false, forKey: AppFeature.connectedDevices.availabilityKey)
         suite.expect(!NotchModule.system.isAvailable(in: defaults)
                      && NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
                      "uninstalling connected devices removes its System page and card")
+
+        defaults.set(true, forKey: AppFeature.notchAgents.availabilityKey)
+        defaults.set(true, forKey: DefaultsKey.notchAgentsEnabled)
+        defaults.set(true, forKey: DefaultsKey.notchAgentsCodex)
+        suite.expect(NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 1,
+                     "enabled Codex usage reserves its dashboard tile")
+        defaults.set(false, forKey: DefaultsKey.notchAgentsCodex)
+        suite.expect(NotchSupport.systemCardCount(hasBattery: false, in: defaults) == 0,
+                     "disabling Codex removes its dashboard tile and height demand")
 
         suite.expect(NotchLayout.systemRowRanges(count: 7, width: 504) == [0..<3, 3..<5, 5..<7],
                      "seven System metrics fill balanced rows instead of leaving a nearly empty column")
@@ -2314,6 +2323,30 @@ enum NotchTests {
                      && NotchControlItem.mixer.setupRequirement == .page(.mixer, feature: .mixer)
                      && NotchControlItem.speedTest.setupRequirement == .page(.system, feature: .monitorNetwork),
                      "page-gated controls lead to their island section or the required feature")
+        let savedLauncherLayout = defaults.object(forKey: DefaultsKey.notchQuickAccessLayout)
+        let savedLauncherEntries = defaults.object(forKey: DefaultsKey.notchLauncherEntries)
+        let launcherEntry = IslandLauncherEntry(name: "Test Game", path: "/Applications/Test Game.app")
+        let appAction = NotchQuickAction.application(launcherEntry.id)
+        defaults.set(try? JSONEncoder().encode([launcherEntry]), forKey: DefaultsKey.notchLauncherEntries)
+        suite.expect(NotchQuickAction(id: appAction.id) == appAction && appAction.isAvailable(in: defaults),
+                     "a saved app round-trips as its own available side-button action")
+        let appLayout = NotchQuickAccessConfiguration(side: .right, actions: [.settings, appAction])
+        defaults.set(appLayout.encoded, forKey: DefaultsKey.notchQuickAccessLayout)
+        suite.expect(NotchQuickAccessConfiguration.stored(in: defaults).actions == [.settings, appAction],
+                     "individual app icons preserve the existing settings button and saved layout")
+        let websiteEntry = IslandLauncherEntry(name: "Example", path: "", website: "https://example.com/docs")
+        let websiteAction = NotchQuickAction.application(websiteEntry.id)
+        defaults.set(try? JSONEncoder().encode([launcherEntry, websiteEntry]), forKey: DefaultsKey.notchLauncherEntries)
+        let mixedLayout = NotchQuickAccessConfiguration(side: .right, actions: [.settings, appAction, websiteAction])
+        defaults.set(mixedLayout.encoded, forKey: DefaultsKey.notchQuickAccessLayout)
+        suite.expect(websiteAction.isAvailable(in: defaults) && NotchQuickAction(id: websiteAction.id) == websiteAction
+                     && NotchQuickAccessConfiguration.stored(in: defaults).actions == [.settings, appAction, websiteAction],
+                     "website actions coexist with existing apps and settings using stable saved shortcut IDs")
+        defaults.set(Data(), forKey: DefaultsKey.notchLauncherEntries)
+        suite.expect(!appAction.isAvailable(in: defaults) && NotchQuickAction(id: "emr.app.invalid") == nil,
+                     "missing and malformed app references cannot launch arbitrary targets")
+        defaults.set(savedLauncherLayout, forKey: DefaultsKey.notchQuickAccessLayout)
+        defaults.set(savedLauncherEntries, forKey: DefaultsKey.notchLauncherEntries)
         defaults.set("panel,panel,unknown,speedTest", forKey: DefaultsKey.notchControlOrder)
         defaults.set("volume,screenshot", forKey: DefaultsKey.notchHiddenControls)
         let controls = NotchSupport.controls(in: defaults)

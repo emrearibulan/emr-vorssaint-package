@@ -226,11 +226,10 @@ final class NotchService: ObservableObject {
     /// the preferences: the open page's geometry is read on every layout pass.
     private var homeControls: [NotchControlItem] = []
     private var fileInteractionActive = false
-    /// A screenshot preview stays when the pointer leaves or another app
-    /// activates. It leaves on its own timer or on a click elsewhere.
+    /// Keep upstream screenshot behaviour while a shortcut chooser is open.
     private var keepsWorkingSurface: Bool { keepsSurfaceOnClick || showsCapturePreview }
     private var keepsSurfaceOnClick: Bool {
-        pinned || trackingMenu || NSApp.modalWindow != nil || panel?.attachedSheet != nil
+        pinned || trackingMenu || IslandLauncherService.shared.isChoosing || NSApp.modalWindow != nil || panel?.attachedSheet != nil
             || NotchLyricsService.shared.isImporting
             // Like the lyrics chooser, these panels stand beside the island
             // instead of hanging from it; a click in them is not a click away.
@@ -1888,6 +1887,10 @@ final class NotchService: ObservableObject {
         switch action {
         case .explore: toggleSections()
         case .settings: openSettings()
+        case .application(let id):
+            if let entry = IslandLauncherService.shared.entries.first(where: { $0.id == id }) {
+                perform { IslandLauncherService.shared.launch(entry) }
+            }
         case .pin: pinned.toggle()
         case .module(let module): select(module)
         case .control(let item):
@@ -4460,7 +4463,6 @@ final class NotchService: ObservableObject {
         var detailNeeds = expanded && !showingSections ? selectedMetric?.monitorNeeds ?? .none : .none
         if needs, AppFeature.monitorDisk.isAvailable { detailNeeds.disk = true }
         if needs, AppFeature.fanControl.isAvailable { detailNeeds.fanSpeed = true }
-        if needs, AppFeature.connectedDevices.isAvailable { detailNeeds.connectedDevices = true }
         SystemMonitor.shared.setNotchDetailNeeds(detailNeeds)
         if needs != notchNeedsMonitor {
             notchNeedsMonitor = needs

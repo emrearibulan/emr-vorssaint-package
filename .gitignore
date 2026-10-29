@@ -24,3 +24,7 @@ CLAUDE.md
 *.xcodeproj
 xcuserdata/
 .swiftpm/
+
+# Python checks
+__pycache__/
+*.pyc

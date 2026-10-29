@@ -5,6 +5,14 @@ import Foundation
 
 /// Static identity of the app, shared by UI, notifications and tooling.
 enum AppInfo {
+    /// emr is built into this Vorssaint process; it has no second app identity.
+    static var isEmrPackageBuild: Bool {
+        #if EMR_PACKAGE
+        return true
+        #else
+        return Bundle.main.object(forInfoDictionaryKey: "EMRPackageVersion") != nil
+        #endif
+    }
     static let name = "Vorssaint"
     static let copyright = "© 2026 Vorssaint"
     static let websiteURL = URL(string: "https://vorssaint.com")!

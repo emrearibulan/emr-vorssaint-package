@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "emr-package",
+  "name": "emr package",
+  "version": "0.4.0",
+  "repository": "emrearibulan/emr-vorssaint-package",
+  "developmentBranch": "emr/integrated-vorssaint",
+  "app": {
+    "name": "Vorssaint",
+    "executable": "Vorssaint",
+    "bundleIdentifier": "com.vorssaint.utils"
+  },
+  "upstream": {
+    "repository": "vorssaint/vorssaint-utils",
+    "branch": "main",
+    "commit": "1cdbd59b1c7dccd036ec1713b2ea048334990d06"
+  },
+  "features": [
+    {
+      "id": "sys-performance",
+      "name": "Sys Performance",
+      "module": "system",
+      "enabledByDefault": true,
+      "documentation": "features/sys-performance.md",
+      "menuTitle": "Sys Performance",
+      "menuIcon": "emr-triangle"
+    },
+    {
+      "id": "apps-games-launcher",
+      "name": "App shortcuts",
+      "module": "quick-access",
+      "enabledByDefault": true,
+      "documentation": "features/app-shortcuts.md",
+      "menuTitle": "App shortcuts",
+      "menuIcon": "emr-triangle"
+    }
+  ],
+  "status": "unreleased",
+  "architecture": "integrated-source-addon"
+}

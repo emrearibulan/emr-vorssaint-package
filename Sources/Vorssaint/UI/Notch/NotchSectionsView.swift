@@ -107,7 +107,7 @@ struct NotchSectionsView: View {
                     .font(.system(size: 22, weight: .medium))
                     .foregroundStyle(tint(for: module))
                     .frame(width: 25, height: 25)
-                Text(module.title(l10n.language))
+                module.featureTitle(l10n.language, markSize: 14)
                     .font(.system(size: 11, weight: .medium))
                     .lineLimit(2)
                     .minimumScaleFactor(0.85)

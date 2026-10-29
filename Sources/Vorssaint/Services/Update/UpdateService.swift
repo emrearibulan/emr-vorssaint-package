@@ -206,6 +206,12 @@ final class UpdateService: ObservableObject {
     // MARK: - Download & install
 
     func downloadAndInstall() {
+        // An official DMG has no emr source additions. Keep upstream checks,
+        // but never silently replace the integrated package with that binary.
+        if AppInfo.isEmrPackageBuild {
+            state = .failed("This Vorssaint build includes emr. Update using EMRPackage/update.command from the emr source package to keep your features.")
+            return
+        }
         if AppInfo.isDeveloperBuild { return }  // never replace the local dev build over itself
         guard let downloadURL else { return }
         // Pre-flight BEFORE spending the download: a translocated app or one

@@ -29,11 +29,13 @@ trap 'exit 1' INT TERM HUP
 # Flags: --dev builds the local-only "Vorssaint (Developer)" variant (its own
 # bundle id, so it coexists with the official app); --install puts it in /Applications.
 DEV=0
+EMR=0
 INSTALL=0
 TEST=0
 TEST_ARGS=()
 for arg in "$@"; do
     case "$arg" in
+        --emr)     EMR=1 ;;
         --dev)     DEV=1 ;;
         --install) INSTALL=1 ;;
         --test)    TEST=1 ;;
@@ -42,7 +44,18 @@ for arg in "$@"; do
     esac
 done
 
-if (( DEV )); then
+if (( EMR && (DEV || INSTALL) )); then
+    echo "Use --emr alone to build; EMRPackage/install.command handles migration and backups." >&2
+    exit 2
+fi
+if (( EMR )); then
+    APP_NAME="Vorssaint"
+    EXECUTABLE="Vorssaint"
+    APP_BUNDLE_ID="com.vorssaint.utils"
+    BUILD_VARIANT_FLAGS=(-D EMR_PACKAGE)
+    APP_OPTIMIZATION_FLAGS=(-Onone)
+    BUILD_CONFIGURATION="emr-source"
+elif (( DEV )); then
     APP_NAME="Vorssaint (Developer)"
     EXECUTABLE="VorssaintDeveloper"
     APP_BUNDLE_ID="com.vorssaint.utils.dev"
@@ -67,6 +80,7 @@ ENTITLEMENTS="Resources/Vorssaint.entitlements"
 LEGACY_IDENTITY="Vorssaint Utils Signing"
 
 developer_id_identity() {
+    (( EMR )) && return 0  # Personal source builds never access signing identities.
     security find-identity -v -p codesigning 2>/dev/null \
         | grep 'Developer ID Application' \
         | head -1 \
@@ -77,6 +91,7 @@ developer_id_identity() {
 # expired one fails the build with errSecInternalComponent), and -v excludes
 # every self-signed one; ask codesign itself with a throwaway copy of /bin/echo.
 legacy_identity_installed() {
+    (( EMR )) && return 1
     local probe signed=1
     # A locked keychain still lists its identities but cannot sign with them,
     # and this one is locked after every reboot; unlock it before asking.
@@ -99,7 +114,7 @@ legacy_identity_installed() {
 # up front instead of falling through to ad-hoc — setup-signing.sh is free,
 # offline and idempotent. Gating on the install rather than the variant keeps
 # this off CI, where neither ci.yml nor release.yml passes --install.
-if (( DEV || INSTALL )) && [[ -z "$(developer_id_identity)" ]] \
+if (( ! EMR && (DEV || INSTALL) )) && [[ -z "$(developer_id_identity)" ]] \
     && ! legacy_identity_installed; then
     echo "▸ No signing identity installed; creating the stable local one…"
     if ! ./Tools/setup-signing.sh; then
@@ -316,6 +331,8 @@ if (( TEST )); then
         Sources/Vorssaint/Services/Notch/NotchNotificationReaderCore.swift
         Sources/Vorssaint/Services/Notch/NotchCalendarSupport.swift
         Sources/Vorssaint/Services/Notch/NotchKeepAwakeSupport.swift
+        Sources/Vorssaint/Extensions/emr/AppShortcuts/IslandLauncherSupport.swift
+        Sources/Vorssaint/Extensions/emr/EmrFeatureLabel.swift
         Sources/Vorssaint/Services/Notch/NotchSupport.swift
         Sources/Vorssaint/Services/Notch/NotchAudioLevelSupport.swift
         Sources/Vorssaint/Services/Notch/NotchVolumeKeyGate.swift
@@ -585,7 +602,7 @@ if (( TEST )); then
     TEST_OUTPUT_FILE_MAP="$TEST_OBJECT_DIR/output-file-map.json"
     write_swift_output_file_map "$TEST_OUTPUT_FILE_MAP" "$TEST_OBJECT_DIR" "${TEST_SOURCES[@]}"
     echo "▸ Building & running tests against $(basename "$SDK")…"
-    swiftc -Onone -incremental -enable-batch-mode -j "$(sysctl -n hw.logicalcpu)" \
+    swiftc -Onone -incremental -enable-batch-mode -j "${EMR_BUILD_JOBS:-$(sysctl -n hw.logicalcpu)}" \
         -module-name VorssaintTests -output-file-map "$TEST_OUTPUT_FILE_MAP" \
         -target "$TARGET" -sdk "$SDK" "${SDK_COMPAT_FLAGS[@]}" \
         "${VM_STATISTICS_COMPAT_FLAGS[@]}" "${TEST_SOURCES[@]}" -o build/metrics-tests
@@ -602,7 +619,7 @@ fi
 
 echo "▸ Compiling ($BUILD_CONFIGURATION) against $(basename "$SDK")…"
 APP_SOURCES=(Sources/Vorssaint/**/*.swift)
-if (( ! DEV )); then
+if (( ! DEV && ! EMR )); then
     # A release starts from an empty build directory, so nothing an earlier
     # build left behind (an old icon catalog, a staged bundle) can reach it.
     # Only the compiler's incremental records stay: they rebuild whatever
@@ -617,7 +634,7 @@ write_swift_output_file_map "$APP_OUTPUT_FILE_MAP" "$APP_OBJECT_DIR" "${APP_SOUR
 # each file's compiler parses the whole module again: a clean release took a
 # quarter of an hour. Batches share that work and run on every core, and the
 # optimization stays per file, as before.
-swiftc "${APP_OPTIMIZATION_FLAGS[@]}" -incremental -enable-batch-mode -j "$(sysctl -n hw.logicalcpu)" \
+swiftc "${APP_OPTIMIZATION_FLAGS[@]}" -incremental -enable-batch-mode -j "${EMR_BUILD_JOBS:-$(sysctl -n hw.logicalcpu)}" \
     -output-file-map "$APP_OUTPUT_FILE_MAP" \
     -target "$TARGET" -sdk "$SDK" "${SDK_COMPAT_FLAGS[@]}" "${VM_STATISTICS_COMPAT_FLAGS[@]}" "${HID_EVENT_SYSTEM_FLAGS[@]}" \
     "${BUILD_VARIANT_FLAGS[@]}" \
@@ -687,9 +704,17 @@ mkdir -p "$STAGE/Contents/Frameworks"
 cp "build/$NOW_PLAYING_ADAPTER" "$STAGE/Contents/Frameworks/$NOW_PLAYING_ADAPTER"
 cp Resources/now-playing.pl "$STAGE/Contents/Resources/now-playing.pl"
 cp Resources/agent-prices.json "$STAGE/Contents/Resources/agent-prices.json"
+cp EMRPackage/assets/emr-mark.png "$STAGE/Contents/Resources/EmrFeatureMark.png"
 cp Resources/com.vorssaint.utils.fan-control.plist \
     "$STAGE/Contents/Library/LaunchDaemons/$FAN_HELPER_ID.plist"
 cp Resources/Info.plist "$STAGE/Contents/Info.plist"
+# Stamp all variants of this source fork so upstream binary updates cannot erase emr.
+if [[ -f EMRPackage/package.json ]]; then
+    EMR_VERSION="$(python3 -c 'import json; print(json.load(open("EMRPackage/package.json"))["version"])')"
+    cp EMRPackage/package.json "$STAGE/Contents/Resources/EMRPackage.json"
+    /usr/libexec/PlistBuddy -c "Add :EMRPackageVersion string $EMR_VERSION" "$STAGE/Contents/Info.plist"
+    /usr/libexec/PlistBuddy -c "Add :EMRSourceCommit string $(git rev-parse HEAD)" "$STAGE/Contents/Info.plist"
+fi
 cp CHANGELOG.md "$STAGE/Contents/Resources/CHANGELOG.md"
 for lproj in Resources/*.lproj(N); do
     cp -R "$lproj" "$STAGE/Contents/Resources/"
@@ -803,6 +828,8 @@ sign_bundle() {
         echo "  signing with Developer ID (hardened runtime): $DEVID"
     elif legacy_identity_installed; then
         echo "  signing with legacy self-signed identity: $LEGACY_IDENTITY"
+    elif (( EMR )); then
+        echo "  signing ad-hoc for this local emr source build"
     else
         echo "  signing ad-hoc (no identity installed — run Tools/setup-signing.sh)"
     fi
@@ -891,7 +918,7 @@ fi
 
 if (( !DEV || !INSTALL )); then
     STAGE_DIRECTORY="build/stage"
-    (( DEV )) && STAGE_DIRECTORY="build/stage.noindex"
+    (( DEV || EMR )) && STAGE_DIRECTORY="build/stage.noindex"
     mkdir -p "$STAGE_DIRECTORY"
     BUILD_STAGE="$STAGE_DIRECTORY/$APP_NAME.app"
     rm -rf "$BUILD_STAGE"

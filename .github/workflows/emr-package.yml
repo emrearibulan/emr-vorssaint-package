@@ -1,0 +1,33 @@
+name: emr integrated package
+on:
+  push:
+    branches: [emr/integrated-vorssaint, 'updates/upstream-*']
+  pull_request:
+    branches: [emr/integrated-vorssaint]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: emr-integrated-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: macos-26
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Source, documentation and migration checks
+        run: |
+          python3 EMRPackage/tools/check-release-docs.py
+          python3 -m unittest discover -s EMRPackage/tests -v
+          ./EMRPackage/install.command --dry-run
+          ./Tools/test-dashboard.sh
+          ./Tools/test-launcher.sh
+      - name: Build single Vorssaint app
+        run: ./EMRPackage/install.command --build-only
+      - name: Verify packaged host
+        run: codesign --verify --deep --strict build/stage.noindex/Vorssaint.app
+      - name: Island, settings and repository regressions
+        run: ./build-emr.sh --test-suite=notch --test-suite=settings --test-suite=repository
