@@ -1856,6 +1856,13 @@ enum FeatureCatalogTests {
             suite.expect(AppFeature.allCases.allSatisfy {
                 firstRunDefaults.bool(forKey: $0.availabilityKey)
             }, "an interrupted onboarding keeps the feature selection already applied")
+            FeaturePreset.prepareCompanionAvailability([.notch, .monitorCPU, .fanControl], in: firstRunDefaults,
+                                                      isSupported: { $0 != .fanControl })
+            suite.expect(Set(AppFeature.allCases.filter { firstRunDefaults.bool(forKey: $0.availabilityKey) }) == [.notch, .monitorCPU],
+                         "the companion profile only prepares selected, hardware-supported features")
+            FeaturePreset.prepareCompanionAvailability([.fanControl], in: firstRunDefaults, isSupported: { _ in true })
+            suite.expect(firstRunDefaults.bool(forKey: AppFeature.fanControl.availabilityKey),
+                         "a companion on supported hardware can prepare fan monitoring")
             firstRunDefaults.removePersistentDomain(forName: firstRunSuiteName)
         } else {
             suite.expect(false, "first-run defaults suite can be created")

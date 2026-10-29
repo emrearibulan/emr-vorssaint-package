@@ -49,7 +49,7 @@ Top-level feature labels added by emr show the supplied emr triangle logo
 before their plain title. Use `EmrFeatureLabel.topLevel(name)` for a feature
 heading, or `module.featureTitle(language)` for a registered island section.
 The original transparent PNG lives at `EMRPackage/assets/emr-mark.png` and is
-copied into the companion by `build-dashboard.sh`. The shared template renders
+copied into both build variants by `build.sh`; the companion adapter reuses that step. The shared template renders
 light on dark UI and dark on light UI; never add an opaque background.
 The SVG is a theme-aware documentation preview of the same source silhouette. Add the island
 module to `NotchModule.isEmrFeature` when registering another package section.

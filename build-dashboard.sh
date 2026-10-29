@@ -22,7 +22,6 @@ replace_once('BUILD_VARIANT_FLAGS=(-D VORSSAINT_DEVELOPMENT)', 'BUILD_VARIANT_FL
 replace_once('cp Resources/Info.plist "$STAGE/Contents/Info.plist"',
              'cp Resources/Info.plist "$STAGE/Contents/Info.plist"\n'
              'cp EMRPackage/package.json "$STAGE/Contents/Resources/EMRPackage.json"\n'
-             'cp EMRPackage/assets/emr-mark.png "$STAGE/Contents/Resources/EmrFeatureMark.png"\n'
              '/usr/libexec/PlistBuddy -c "Add :EMRPackageVersion string ' + version + '" "$STAGE/Contents/Info.plist"')
 a=s.index('developer_id_identity() {'); b=s.index('# Any build that lands', a)
 s=s[:a]+'''developer_id_identity() { return 0; }
