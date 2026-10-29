@@ -3,7 +3,7 @@
 set -euo pipefail
 EMR_ROOT="${0:A:h:h}"
 EMR_REPO=emrearibulan/emr-vorssaint-package
-EMR_TAG="$(curl --fail --silent --show-error --location "https://api.github.com/repos/$EMR_REPO/releases/latest" | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])')"
+EMR_TAG="$(curl --connect-timeout 15 --max-time 60 --fail --silent --show-error --location "https://api.github.com/repos/$EMR_REPO/releases/latest" | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])')"
 [[ "$EMR_TAG" =~ '^emr-v[0-9]+\.[0-9]+\.[0-9]+$' ]] || exit 1
 EMR_TEMP="$(mktemp -d -t emr-integrated-update)"
 trap 'rm -rf "$EMR_TEMP"' EXIT

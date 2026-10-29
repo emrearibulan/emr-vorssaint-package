@@ -5,7 +5,7 @@ one **Vorssaint.app**, one settings domain and one Dynamic Island. emr is a
 modular source extension maintained in this fork; it is not a second application
 or a runtime plugin for an untouched official binary.
 
-**Version:** 0.4.0 (development; not yet published)
+**Version:** 0.4.0
 
 Upstream: [Vorssaint](https://github.com/vorssaint/vorssaint-utils), `main` at
 `1cdbd59b1c7dccd036ec1713b2ea048334990d06`. The original app's functionality,
@@ -36,7 +36,7 @@ not use a Developer Program account, change Keychain identities or require full
 Xcode. macOS may require Accessibility or Screen Recording permissions to be
 re-authorized for the rebuilt Vorssaint app. Do not reset unrelated permissions.
 
-## Install the development branch
+## Install
 
 This is the new integrated architecture. Historical tags through `emr-v0.3.0`
 build the separate Island Monitor companion and should not be used for it.
@@ -45,7 +45,7 @@ Quit Vorssaint before installing. If you have Island Monitor, turn off its launc
 at login setting and quit it too, then use the migration command below.
 
 ```sh
-git clone --depth 1 --branch emr/integrated-vorssaint https://github.com/emrearibulan/emr-vorssaint-package.git vorssaint-emr
+git clone --depth 1 --branch emr-v0.4.0 https://github.com/emrearibulan/emr-vorssaint-package.git vorssaint-emr
 cd vorssaint-emr
 ./EMRPackage/install.command
 ```
@@ -95,8 +95,8 @@ From your source folder, quit Vorssaint and run:
 ```
 
 This fetches the latest published **integrated** emr source release, builds and
-installs it. It refuses old companion-only releases. Until the first integrated
-release is published, update the development source with Git and rebuild instead.
+installs it. It refuses old companion-only releases. Your original clone can stay on its
+release tag; the update command fetches a fresh source checkout for each update.
 The in-app upstream update check remains useful, but installing an official DMG
 would remove the emr additions. This build blocks that binary replacement and
 points to the source update command.
@@ -104,6 +104,15 @@ points to the source update command.
 The fork follows Vorssaint by merging upstream changes, testing them together
 with emr and publishing a new combined source version. Upstream releases do not
 automatically become tested emr releases. Conflicts require review.
+
+### Upgrade from the old companion package
+
+After quitting both apps, the old source folder's update command can fetch the
+new architecture and migrate it:
+
+```sh
+./EMRPackage/update.command --migrate-island-monitor
+```
 
 ## Backups and rollback
 

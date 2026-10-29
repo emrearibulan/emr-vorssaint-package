@@ -1,6 +1,6 @@
 # emr package changelog
 
-## 0.4.0 — integrated Vorssaint (development)
+## 0.4.0 — 29 October 2026 · integrated Vorssaint
 
 - Rebased the source extension on current Vorssaint main at `1cdbd59b`.
 - Build one Vorssaint app with its original settings domain, rather than a separate Island Monitor companion.

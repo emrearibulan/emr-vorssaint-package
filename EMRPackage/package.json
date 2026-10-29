@@ -35,6 +35,6 @@
       "menuIcon": "emr-triangle"
     }
   ],
-  "status": "unreleased",
+  "status": "released",
   "architecture": "integrated-source-addon"
 }
