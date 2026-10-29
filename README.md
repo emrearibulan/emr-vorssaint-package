@@ -172,6 +172,20 @@ The updater fetches the latest published emr source release into a temporary che
 
 The installer refuses to replace a running companion or an unrelated app. If final installation verification fails, it restores the previous companion app.
 
+### Roll back to 0.2.5
+
+After updating, use **Layout → App shortcuts → Add Website…**, add a website, and check its icon and browser launch. Version 0.3.0 has passed automated package checks; manual UI verification is in progress.
+
+If you need the previous version, **quit Island Monitor** and run this from a folder that does not already contain `emr-package-rollback-0.2.5`:
+
+```sh
+git clone --depth 1 --branch emr-v0.2.5 https://github.com/emrearibulan/emr-vorssaint-package.git emr-package-rollback-0.2.5
+cd emr-package-rollback-0.2.5
+./EMRPackage/install.command
+```
+
+This rebuilds and installs 0.2.5 in place of the companion; the official Vorssaint app is kept. Existing app shortcuts and dashboard preferences use the same settings domain. Website shortcuts are supported only by 0.3.0 and later, so they will not appear in 0.2.5. Editing app shortcuts while downgraded may discard website entries; keep the website URLs handy. After rolling back, wait for a release with the fix before running `update.command`, because it installs the latest published version again.
+
 ### Following official Vorssaint releases
 
 A daily GitHub workflow checks for a new official stable release. It attempts the merge on a review branch and runs package, build and regression checks. Conflicts stop for manual work; successful runs prepare a pull request or compare link. The workflow does not automatically merge, publish or change installed apps.

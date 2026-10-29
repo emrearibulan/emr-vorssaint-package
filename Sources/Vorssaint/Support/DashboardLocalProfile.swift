@@ -15,9 +15,7 @@ enum DashboardLocalProfile {
         let enabled: Set<AppFeature> = [.notch, .notchAgents, .monitorCPU, .monitorGPU,
                                        .monitorMemory, .monitorNetwork, .monitorDisk,
                                        .monitorPower, .fanControl]
-        for feature in AppFeature.allCases {
-            defaults.set(enabled.contains(feature), forKey: feature.availabilityKey)
-        }
+        FeaturePreset.prepareCompanionAvailability(enabled, in: defaults, isSupported: { $0.isHardwareSupported })
         defaults.set(true, forKey: DefaultsKey.hasOnboarded)
         defaults.set(OnboardingInfo.currentFeatureSet, forKey: DefaultsKey.featuresOnboardingVersion)
         defaults.set(AppInfo.version, forKey: DefaultsKey.lastUpdateIntroVersion)

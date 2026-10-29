@@ -26,6 +26,15 @@ enum FeaturePreset: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The isolated companion's first-run selection uses the same hardware
+    /// support decision as the runtime, without starting live services here.
+    static func prepareCompanionAvailability(_ selected: Set<AppFeature>, in defaults: UserDefaults,
+                                            isSupported: (AppFeature) -> Bool) {
+        for feature in AppFeature.allCases {
+            defaults.set(selected.contains(feature) && isSupported(feature), forKey: feature.availabilityKey)
+        }
+    }
+
     /// The features the preset keeps installed.
     var features: Set<AppFeature> {
         switch self {

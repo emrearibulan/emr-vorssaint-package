@@ -7,7 +7,8 @@
 - Fetch website icons directly from the site and its declared icon hosts; cache colour icons locally, with refresh, contrast backing and globe fallback.
 - Keep icon discovery separate from saved page paths/queries, browser cookies, credentials and third-party favicon services. Bound redirects, response sizes and raster decoding.
 - Preserve existing app bookmarks, saved IDs and side layouts. Added legacy/mixed-entry, URL validation, icon-discovery and local-network fixture checks.
-- Updated README and feature documentation for installation and use.
+- Include the emr logo in both build variants and route the first-run companion selection through hardware-aware preset preparation.
+- Updated README and feature documentation for installation, live testing and rollback to 0.2.5.
 
 ## 0.2.5 — 28 October 2026
 
